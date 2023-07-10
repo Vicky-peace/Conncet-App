@@ -6,6 +6,8 @@ import cors from 'cors';
 
 // import routes
 import authRoutes from './Routes/authRoutes.js';
+import userRoutes from './Routes/userRoutes.js';
+import chatRoutes from './Routes/chatRoutes.js';
 
 const app = express();
 
@@ -35,6 +37,8 @@ app.use((req,res,next) => {
 
 // instantiate the routes here
 authRoutes(app);
+userRoutes(app);
+chatRoutes(app);
 
 
 app.get('/', (req,res) => {

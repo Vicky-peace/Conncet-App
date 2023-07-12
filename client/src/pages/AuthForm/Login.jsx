@@ -1,9 +1,33 @@
 import React from "react";
 import { BiSolidPhoneCall } from "react-icons/bi";
-import {Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import { login } from "../../redux/apiCall";
+import { useNavigate } from "react-router-dom";
+import {useDispatch,useSelector} from 'react-redux';
 import "./login.css";
 
+const schema = yup.object().shape({
+  username: yup.string().required("Username is required"),
+  password: yup.string().required("Password is required"),
+});
+
 const Login = () => {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { register, handleSubmit, formState: { errors } } = useForm({
+    resolver: yupResolver(schema),
+  });
+
+  const onSubmit = (data) => {
+    console.log(data); 
+    const {username, password} = data;
+    login(dispatch,{username,password});
+    navigate('/')
+  };
+
   return (
     <>
       <div className="Auth">
@@ -17,7 +41,7 @@ const Login = () => {
           </div>
         </div>
         <div className="a-right">
-          <form className="infoForm authForm">
+          <form className="infoForm authForm" onSubmit={handleSubmit(onSubmit)}>
             <h3>Log In</h3>
 
             <div>
@@ -26,7 +50,9 @@ const Login = () => {
                 placeholder="Username"
                 className="infoInput"
                 name="username"
+                {...register("username")}
               />
+              {errors.username && <p className="error">{errors.username.message}</p>}
             </div>
 
             <div>
@@ -35,20 +61,21 @@ const Login = () => {
                 className="infoInput"
                 placeholder="Password"
                 name="password"
+                {...register("password")}
               />
+              {errors.password && <p className="error">{errors.password.message}</p>}
             </div>
 
             <div>
               <span style={{ fontSize: "20px" }}>
-                Don't have an account ?
-                <Link
-                  to="/register"
-                  style={{ color: "#008080", cursor: "pointer" }}
-                >
+                Don't have an account?
+                <Link to="/register" style={{ color: "#008080", cursor: "pointer" }}>
                   Register!
                 </Link>
               </span>
-              <button className="button infoButton">Login</button>
+              <button className="button infoButton" type="submit">
+                Login
+              </button>
             </div>
           </form>
         </div>

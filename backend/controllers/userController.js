@@ -55,31 +55,101 @@ export const getUser = async (req, res) => {
 
 
 //   Update a user
+// export const updateUser = async (req, res) => {
+//     const {id} = req.params;
+//     try{
+//         const { username,password , firstname ,lastname, isAdmin, profilepicture, coverpicture, about,livesIn, worksAt,relationship,country} = req.body;
+
+//         let pool = await sql.connect(config.sql);
+//         let updateUser = await pool.request()
+//         .input('id',sql.Int,id)
+//         .input('username',sql.VarChar,username)
+//         .input('firstname',sql.VarChar,firstname)
+//         .input('lastname',sql.VarChar,lastname)
+//         .input('password',sql.VarChar,password)
+//         .query('UPDATE Users SET username=@username, firstname=@firstname,password=@password WHERE id= @id') 
+
+//         res.status(200).json({
+//             status:'success',
+//             message: 'User updated successfully',
+//             data:updateUser
+//         })
+//     } catch(error){
+//         res.status(404).json({message: error.message});
+//     }finally{
+//         sql.close();
+//     }
+// }
+
+
 export const updateUser = async (req, res) => {
-    const {id} = req.params;
-    try{
-        const { username,password , firstname ,lastname, isAdmin, profilepicture, coverpicture, about,livesIn, worksAt,relationship,country} = req.body;
+  const {id} = req.params;
+  const { _id, currentUserAdmin, password } = req.body;
 
-        let pool = await sql.connect(config.sql);
-        let updateUser = await pool.request()
-        .input('id',sql.Int,id)
-        .input('username',sql.VarChar,username)
-        .input('firstname',sql.VarChar,firstname)
-        .input('lastname',sql.VarChar,lastname)
-        .input('password',sql.VarChar,password)
-        .query('UPDATE Users SET username=@username, firstname=@firstname,password=@password WHERE id= @id') 
+  if (id === _id) {
+    try {
+      let pool = await sql.connect(config.sql);
+      let user = await pool
+        .request()
+        .input('id', sql.Int, id)
+        .query('SELECT * FROM Users WHERE id = @id');
 
-        res.status(200).json({
-            status:'success',
-            message: 'User updated successfully',
-            data:updateUser
-        })
-    } catch(error){
-        res.status(404).json({message: error.message});
-    }finally{
-        sql.close();
+      if (user.recordset.length === 0) {
+        res.status(404).json({ message: "User not found" });
+        return;
+      }
+
+      // if we also have to update password then password will be bcrypt-ed again
+      if (password) {
+       
+        const hashedPassword = await bcrypt.hashSync(password,10);
+        await pool
+          .request()
+          .input('id', sql.Int, id)
+          .input('password', sql.NVarChar(255), hashedPassword)
+          .query('UPDATE Users SET password = @password WHERE id = @id');
+      }
+
+      await pool
+        .request()
+        .input('id', sql.Int, id)
+        .input('firstname', sql.NVarChar(255), req.body.firstname)
+        .input('lastname', sql.NVarChar(255), req.body.lastname)
+        .input('isAdmin', sql.Bit, req.body.isAdmin)
+        .input('profilePicture', sql.NVarChar(sql.MAX), req.body.profilePicture)
+        .input('coverPicture', sql.NVarChar(sql.MAX), req.body.coverPicture)
+        .input('about', sql.NVarChar(sql.MAX), req.body.about)
+        .input('livesIn', sql.NVarChar(255), req.body.livesIn)
+        .input('worksAt', sql.NVarChar(255), req.body.worksAt)
+        .input('relationship', sql.NVarChar(255), req.body.relationship)
+        .input('country', sql.NVarChar(255), req.body.country)
+        .query('UPDATE Users SET firstname = @firstname, lastname = @lastname, isAdmin = @isAdmin, profilePicture = @profilePicture, coverPicture = @coverPicture, about = @about, livesIn = @livesIn, worksAt = @worksAt, relationship = @relationship, country = @country WHERE id = @id');
+
+      const updatedUser = await pool
+        .request()
+        .input('id', sql.Int, id)
+        .query('SELECT * FROM Users WHERE id = @id');
+
+        let token = `JWT ${jwt.sign(
+          {
+            username: user.username,
+            id: user.id,
+          },
+          process.env.SECRET,
+          { expiresIn: process.env.EXPIRY }
+        )}`;
+
+
+      res.status(200).json({ user: updatedUser.recordset[0], token });
+    } catch (error) {
+      res.status(500).json(error);
+    } finally {
+      sql.close();
     }
-}
+  } else {
+    res.status(403).json("Access Denied! You can update only your own Account.");
+  }
+};
 
 // Delete a user
 export const deleteUser = async(req,res) =>{

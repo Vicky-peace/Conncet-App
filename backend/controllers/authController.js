@@ -58,7 +58,7 @@ export const login = async (req, res) => {
     if (!user) {
       res.status(401).json({
         status: "Error",
-        message: "Authentication User does not exist",
+        message: "Authentication failed.  User does not exist",
       });
     } else if (user) {
       if (!bcrypt.compareSync(password, user.password)) {

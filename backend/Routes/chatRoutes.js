@@ -5,7 +5,7 @@ const chatRoutes = (app) => {
      .post(createChat)
 
      app.route('/chat/:id')
-     .get(userChats)
+     .get( userChats)
 
      app.route('/find/:firstId/:secondId')
      .get(findChat)

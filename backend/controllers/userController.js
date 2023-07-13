@@ -102,53 +102,123 @@ export const deleteUser = async(req,res) =>{
     }
 }
 
-// Follow a user
-export const followUser = async(req,res) =>{
-    const {id} = req.params;
-    const {_id}  = req.body;
-    
-    // Forbids user to follow themselves
-    if(_id == id){
-        res.status(403).json("Action Forbidden");
-    } else{
-        try {
-           let pool = await sql.connect(config.sql);
-           const followUserResult = await pool.request()
-            .query('SELECT * FROM Users WHERE id = @id');
-            const followingUserResult = await pool.request()
-             .query ('SELECT * FROM Users WHERE id = @_id');
-      
-            if (
-              followUserResult.recordset.length > 0 &&
-              followingUserResult.recordset.length > 0
-            ) {
-              const followUser = followUserResult.recordset[0];
-              const followingUser = followingUserResult.recordset[0];
-      
-              if (!followUser.followers.includes(_id)) {
-                await pool.request()
-                .query`
-                  UPDATE Users
-                  SET followers = ARRAY_APPEND(followers, ${_id})
-                  WHERE id = ${id};
-      
-                  UPDATE Users
-                  SET following = ARRAY_APPEND(following, ${id})
-                  WHERE id = ${_id};
-                `;
-      
-                res.status(200).json("User followed!");
-              } else {
-                res.status(403).json("You are already following this user.");
-              }
-            } else {
-              res.status(404).json("User not found");
-            }
-          } catch (error) {
-            res.status(500).json(error);
-          } finally {
-            sql.close();
-    }
+// // Follow a user
+// export const followUser = async (req, res) => {
+//   const id = req.params.id;
+//   const { _id } = req.body;
 
-}
+//   if (_id === id) {
+//     res.status(403).json("Action Forbidden");
+//   } else {
+//     try {
+//       const pool = await sql.connect(config.sql);
+
+//       const followUserResult = await pool
+//         .request()
+//         .input("userId", sql.Int, id)
+//         .input("followerId", sql.Int, _id)
+//         .query("INSERT INTO Followers (userId, followerId) VALUES (@userId, @followerId)");
+
+//       if (followUserResult.rowsAffected[0] === 1) {
+//         res.status(200).json("User followed!");
+//       } else {
+//         res.status(403).json("You are already following this user");
+//       }
+//     } catch (error) {
+//       res.status(500).json(error.message);
+//     } finally {
+//       sql.close();
+//     }
+//   }
+// };
+
+// // UnfollowUser
+
+// export const unfollowUser = async (req, res) => {
+//   const id = req.params.id;
+//   const { _id } = req.body;
+
+//   if (_id === id) {
+//     res.status(403).json("Action Forbidden");
+//   } else {
+//     try {
+//       const pool = await sql.connect(config.sql);
+
+//       const unfollowUserResult = await pool
+//         .request()
+//         .input("userId", sql.Int, id)
+//         .input("followerId", sql.Int, _id)
+//         .query("DELETE FROM Followers WHERE userId = @userId AND followerId = @followerId");
+
+//       if (unfollowUserResult.rowsAffected[0] === 1) {
+//         res.status(200).json("Unfollowed successfully!");
+//       } else {
+//         res.status(403).json("You are not following this user");
+//       }
+//     } catch (error) {
+//       res.status(500).json(error.message);
+//     } finally {
+//       sql.close();
+//     }
+//   }
+// };
+
+// Follow user
+export const followUser = async (req, res) => {
+  const id = req.params.id;
+  const { _id } = req.body;
+
+  if (_id === id) {
+    res.status(403).json("Action Forbidden");
+  } else {
+    try {
+      const pool = await sql.connect(config.sql);
+
+      const followUserResult = await pool
+        .request()
+        .input("userId", sql.Int, id)
+        .input("followerId", sql.Int, _id)
+        .query("UPDATE Users SET followers = CONCAT(followers, ',', @userId) WHERE id = @userId");
+
+      if (followUserResult.rowsAffected[0] === 1) {
+        res.status(200).json("User followed!");
+      } else {
+        res.status(403).json("You are already following this user");
+      }
+    } catch (error) {
+      console.log(error)
+      res.status(500).json(error.message);
+    } finally {
+      sql.close();
+    }
+  }
+};
+
+export const unfollowUser = async (req, res) => {
+  const id = req.params.id;
+  const { _id } = req.body;
+
+  if (_id === id) {
+    res.status(403).json("Action Forbidden");
+  } else {
+    try {
+      const pool = await sql.connect(config.sql);
+
+      const unfollowUserResult = await pool
+        .request()
+        .input("userId", sql.Int, id)
+        .input("followerId", sql.Int, _id)
+        .query("UPDATE Users SET followers = REPLACE(followers, CONCAT(',', @followerId), '') WHERE id = @userId");
+
+      if (unfollowUserResult.rowsAffected[0] === 1) {
+        res.status(200).json("Unfollowed successfully!");
+      } else {
+        res.status(403).json("You are not following this user");
+      }
+    } catch (error) {
+      res.status(500).json(error.message);
+    } finally {
+      sql.close();
+    }
+  }
 };

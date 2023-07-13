@@ -25,19 +25,28 @@ const schema = yup.object().shape({
 function Register() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.user);
 
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
   });
   
-  const onSubmit = (data) => {
+  const onSubmit = async (data) => {
     console.log(data); 
     const {firstname,lastname,username,password} = data;
-    registerUser(dispatch,{firstname,lastname,username,password});
+    try{
+     await registerUser(dispatch,{firstname,lastname,username,password});
+     if(user == 'User registered successfully'){
+      navigate('/login')
+     } 
     toast.info(`success you have registered successfully`,{
       position:'top-center'
   })
-  navigate('/login');
+    } catch (error) {
+      console.log(error);
+    }
+    
+      
   };
 
   return (

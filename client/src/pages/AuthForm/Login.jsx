@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { BiSolidPhoneCall } from "react-icons/bi";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -17,15 +17,29 @@ const schema = yup.object().shape({
 const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.user.user);
   const { register, handleSubmit, formState: { errors } } = useForm({
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = (data) => {
+  
+
+  const onSubmit = async (data) => {
     console.log(data); 
     const {username, password} = data;
-    login(dispatch,{username,password});
-    navigate('/')
+    try{
+    await  login(dispatch,{username,password});
+    if(user == 'User Logged in successfully'){
+      navigate('/')
+    } else{
+      navigate('/login')
+    }
+    } catch (error){
+       console.log(error);
+    }
+   
+  
+   
   };
 
   return (

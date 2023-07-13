@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { BrowserRouter,Routes, Route } from 'react-router-dom';
+import { BrowserRouter,Routes, Route ,Navigate } from 'react-router-dom';
 import {useSelector} from 'react-redux';
 import viteLogo from '/vite.svg';
 import Home from './pages/home/Home';
@@ -13,8 +13,8 @@ import './App.css'
 
 function App() {
 const user = useSelector((state) =>
- state.user.data);
- const isLoggedIn = user !==null; //Check if user is logged in
+ state.user.user);
+  
 
   return (
     <>
@@ -24,10 +24,28 @@ const user = useSelector((state) =>
        <div className='blur' style={{top: '36%', left:'-8rem'}}></div>
        <BrowserRouter>
        <Routes>
-        <Route path='/' element={isLoggedIn ? <Home/> :  <Navigate to='/login' />}/>
-        <Route path='/profile' element={isLoggedIn ? <Profile/> :  <Navigate to='/login' />}/>
+        <Route path='/' element={user ? <Home/> :  <Login/>}/>
+        <Route path='/profile' element={user ? <Profile/> : <Login/>} />
         <Route path='/register' element={ <Register/>}/>
         <Route path='/login' element={  <Login/>}/>
+        
+        {/* <Route
+          path="/"
+          element={user ? <Home /> : <Navigate to="/login" />}
+        />
+        <Route
+          path="/login"
+          element={user ? <Navigate to="/" /> : <Login/>}
+        />
+        <Route
+          path="/register"
+          element={user ? <Navigate to="/login" /> : <Register />}
+        />
+        <Route
+          path="/profile/:id"
+          element={user ? <Profile /> : <Navigate to="/login" />}
+        />
+       */}
        
       
       

@@ -9,6 +9,7 @@ import authRoutes from './Routes/authRoutes.js';
 import userRoutes from './Routes/userRoutes.js';
 import chatRoutes from './Routes/chatRoutes.js';
 import postRoutes from './Routes/postRoutes.js';
+import messageRoutes from './Routes/messageRoutes.js';
 
 const app = express();
 
@@ -41,6 +42,7 @@ authRoutes(app);
 userRoutes(app);
 chatRoutes(app);
 postRoutes(app);
+messageRoutes(app);
 
 
 app.get('/', (req,res) => {

@@ -14,33 +14,30 @@ const schema = yup.object().shape({
   password: yup.string().required("Password is required"),
 });
 
+
+
 const Login = () => {
+  const user = useSelector((state) => state.user.user?.status);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const user = useSelector((state) => state.user.user);
-  const { register, handleSubmit, formState: { errors } } = useForm({
+ 
+  const { register, handleSubmit, formState: { errors },reset } = useForm({
     resolver: yupResolver(schema),
   });
 
-  
 
-  const onSubmit = async (data) => {
-    console.log(data); 
-    const {username, password} = data;
-    try{
-    await  login(dispatch,{username,password});
-    if(user == 'User Logged in successfully'){
-      navigate('/')
-    } else{
-      navigate('/login')
-    }
-    } catch (error){
-       console.log(error);
-    }
-   
-  
-   
+  const onSubmit = (data) => {
+   login(dispatch,data);
+   reset();
+   if(user == "success"){
+    navigate('/')
+   } else{
+     navigate('/login')
+   }
   };
+
+  
+ 
 
   return (
     <>

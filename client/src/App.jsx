@@ -24,30 +24,12 @@ const user = useSelector((state) =>
        <div className='blur' style={{top: '36%', left:'-8rem'}}></div>
        <BrowserRouter>
        <Routes>
-        <Route path='/' element={user ? <Home/> :  <Login/>}/>
-        <Route path='/profile' element={user ? <Profile/> : <Login/>} />
+        <Route path='/' element={ <Home/>}/>
+        <Route path='/profile' element={<Profile/>} />
         <Route path='/register' element={ <Register/>}/>
         <Route path='/login' element={  <Login/>}/>
         
-        {/* <Route
-          path="/"
-          element={user ? <Home /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/login"
-          element={user ? <Navigate to="/" /> : <Login/>}
-        />
-        <Route
-          path="/register"
-          element={user ? <Navigate to="/login" /> : <Register />}
-        />
-        <Route
-          path="/profile/:id"
-          element={user ? <Profile /> : <Navigate to="/login" />}
-        />
-       */}
        
-      
       
        </Routes>
       

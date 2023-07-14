@@ -4,11 +4,12 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { registerUser } from "../../redux/apiCall";
+// import { registerUser } from "../../redux/apiCall";
 import axios from 'axios';
 import {useDispatch,useSelector} from 'react-redux';
 import { useNavigate } from "react-router-dom";
-import {toast} from 'react-toastify'
+import {toast} from 'react-toastify';
+import {apiDomain} from '../../Utility/Utils'
 import "./register.css";
 
 const schema = yup.object().shape({
@@ -22,32 +23,29 @@ const schema = yup.object().shape({
     .required("Confirm Password is required"),
 });
 
-function Register() {
+const  Register =() =>{
+  // const user = useSelector((state) => state.user.user.status);
+  // console.log(user)
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const user = useSelector((state) => state.user.user);
+  // const dispatch = useDispatch();
+  
 
-  const { register, handleSubmit, formState: { errors } } = useForm({
+  const { register, handleSubmit, formState: { errors },reset } = useForm({
     resolver: yupResolver(schema),
   });
   
-  const onSubmit = async (data) => {
-    console.log(data); 
-    const {firstname,lastname,username,password} = data;
-    try{
-     await registerUser(dispatch,{firstname,lastname,username,password});
-     if(user == 'User registered successfully'){
-      navigate('/login')
-     } 
-    toast.info(`success you have registered successfully`,{
-      position:'top-center'
-  })
-    } catch (error) {
-      console.log(error);
-    }
-    
-      
-  };
+  const onSubmit = (data) => {
+axios.post(`${apiDomain}/auth/register`,data)
+.then((response) =>{
+  response.data.message && alert(response.data.message);
+  navigate("/login");
+  reset();
+})
+.catch(({ response }) => {
+  console.log(response);
+  alert(response.data.error);
+});
+}
 
   return (
     <div className="Auth">

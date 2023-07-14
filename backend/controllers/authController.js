@@ -7,6 +7,7 @@ import jwt from "jsonwebtoken";
 export const register = async (req, res) => {
   const { firstname, lastname, username, password } = req.body;
   const hashedPassword = bcrypt.hashSync(password, 10);
+  console.log(hashedPassword);
   try {
     let pool = await sql.connect(config.sql);
 
@@ -30,7 +31,10 @@ export const register = async (req, res) => {
         "INSERT INTO Users (firstname, lastname, username, password)  VALUES (@firstname, @lastname, @username, @password)"
       );
 
-    return res.status(201).json({ message: "User registered successfully" });
+    return res.status(200).json({
+      status: "success",
+      message: "User registered successfully",
+    });
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Internal server error" });
@@ -44,7 +48,7 @@ export const register = async (req, res) => {
 export const login = async (req, res) => {
   const { username, password } = req.body;
   try {
-    console.log(req.body);
+   
 
     // Connect the database
     let pool = await sql.connect(config.sql);
@@ -57,8 +61,8 @@ export const login = async (req, res) => {
     console.log(user);
     if (!user) {
       res.status(401).json({
-        status: "Error",
-        message: "Authentication failed.  User does not exist",
+        status: "error",
+        message: "Authentication failed. User does not exist",
       });
     } else if (user) {
       if (!bcrypt.compareSync(password, user.password)) {
@@ -78,7 +82,8 @@ export const login = async (req, res) => {
         )}`;
 
         const { id, username } = user;
-        return res.json({
+        res.status(200).json({
+          status: "success",
           message: "User Logged in successfully",
           id: id,
           username: username,

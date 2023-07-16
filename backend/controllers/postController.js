@@ -29,8 +29,12 @@ export const createPost = async (req, res) => {
       createdAt,
       image,
     };
-    res.status(200).json(createdPost);
+    res.status(200).json({
+      status: "success",
+          data: createdPost,
+     });
   } catch (error) {
+    console.log(error)
     res.status(500).json({ message: error.message });
   } finally {
     sql.close();

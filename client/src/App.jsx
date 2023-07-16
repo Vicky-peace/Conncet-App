@@ -13,7 +13,7 @@ import './App.css'
 
 function App() {
 const user = useSelector((state) =>
- state.user.user);
+ state.user.user?.username);
   
 
   return (
@@ -24,8 +24,8 @@ const user = useSelector((state) =>
        <div className='blur' style={{top: '36%', left:'-8rem'}}></div>
        <BrowserRouter>
        <Routes>
-        <Route path='/' element={ <Home/>}/>
-        <Route path='/profile' element={<Profile/>} />
+        <Route path='/' element={user? <Home/> : <Login/>}/>
+        <Route path='/profile' element={ user ? <Profile/> : <Login/>} />
         <Route path='/register' element={ <Register/>}/>
         <Route path='/login' element={  <Login/>}/>
         

@@ -1,40 +1,30 @@
 import {createSlice} from "@reduxjs/toolkit";
 
 const postSlice = createSlice({
-    name: "post",
+    name: "posts",
     initialState:{
         posts: null,
-        loading: false,
+        isFetching: false,
         error: false,
-        uploading: false
     },
     reducers:{
         uploadStart: (state) => {
-            state.error = false;
-            state.uploading = true;
+            state.isFetching = true;
         },
         uploadSuccess: (state,action) =>{
-            state.posts = [action.payload, ...state.posts];
-            state.uploading = false;
+            state.posts = action.payload;
+            state.isFetching = false;
             state.error = false;
         }, 
         uploadFail: (state) => {
-            state.uploading= false;
+            state.isFetching= false;
             state.error = true;
         },
-        retrievingStart: (state) =>{
-            state.loading = true;
-            state.error= false;
-        },
-        retrievingSuccess: (state, action) =>{
-            state.posts = action.payload;
-            state.loading = false;
+        uploadPostSuccess: (state, action) => {
+            state.isFetching = false;
+            state.posts.push(action.payload);
             state.error = false;
-        },
-        retrievingFail: (state) =>{
-            state.loading = false;
-            state.error = true;
-        },
+          },
 
     },
 });
@@ -42,9 +32,7 @@ export const{
     uploadStart,
     uploadSuccess,
     uploadFail,
-    retrievingStart,
-    retrievingSuccess,
-    retrievingFail,
+    uploadPostSuccess
 } = postSlice.actions
 
 export default postSlice.reducer;

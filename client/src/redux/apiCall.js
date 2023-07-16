@@ -13,9 +13,7 @@ import {
   uploadStart,
   uploadSuccess,
   uploadFail,
-  retrievingStart,
-  retrievingSuccess,
-  retrievingFail,
+  uploadPostSuccess
 } from "./postSlice";
 
 import axios from "axios";
@@ -36,7 +34,7 @@ export const login = async (dispatch, user) => {
    
   } catch ({response}) {
     dispatch(loginFailure());
-    alert(response.data.error);
+    alert('Invalid Credentials Please input correct credentials');
   }
 };
 export const logOut = function (dispatch) {
@@ -59,21 +57,21 @@ export const getTimelinePosts = (id) => async (dispatch) => {
     dispatch(retrievingFail());
   }
 };
-// uploading post
-export const uploadPost = (data) => async (dispatch) =>{
+
+export const createPost = async (dispatch,data) =>{
+  console.log(data, "post info");
   dispatch(uploadStart());
   try{
-    const newPost = await fetch(`${apiDomain}/auth/login`, {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(user),
-    });
-    dispatch(uploadSuccess(newPost.data));
-  }catch (error) {
-    console.log(error);
-    dispatch(uploadFail());
+    const postVal = await axios.post(`${apiDomain}/post`,data);
+    console.log(postVal.data.status);
+    if(postVal.data.status == "success"){
+      alert("Post uploaded successfully")
+      dispatch( uploadSuccess());
+    } else{
+      alert("Post not uploaded please try again")
+    }
+    dispatch(uploadPostSuccess(data))
+  } catch(error){
+    dispatch(uploadFail())
   }
-
 }

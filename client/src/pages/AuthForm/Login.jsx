@@ -17,7 +17,7 @@ const schema = yup.object().shape({
 
 
 const Login = () => {
-  const user = useSelector((state) => state.user.user?.status);
+  const user = useSelector((state) => state.user.user?.username);
   const navigate = useNavigate();
   const dispatch = useDispatch();
  
@@ -27,12 +27,11 @@ const Login = () => {
 
 
   const onSubmit = (data) => {
-   login(dispatch,data);
+   
+   {
+    login(dispatch,data);
    reset();
-   if(user == "success"){
-    navigate('/')
-   } else{
-     navigate('/login')
+    user ? <Home/> : <Login/>
    }
   };
 

@@ -8,11 +8,11 @@ import './post.css'
 const Post = () => {
   const dispatch = useDispatch()
   const {user} = useSelector((state) => state?.user?.user);
-  const {data} = useSelector((state)=> state?.post?.posts)
+  const {data} = useSelector((state)=> state?.post?.posts) || {};
 
   useEffect(() =>{
     getPosts(dispatch);
-  }, [])
+  }, [dispatch]);
   return (
     <div className='Posts'>
       {

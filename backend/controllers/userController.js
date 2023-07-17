@@ -54,32 +54,6 @@ export const getUser = async (req, res) => {
   }
 
 
-//   Update a user
-// export const updateUser = async (req, res) => {
-//     const {id} = req.params;
-//     try{
-//         const { username,password , firstname ,lastname, isAdmin, profilepicture, coverpicture, about,livesIn, worksAt,relationship,country} = req.body;
-
-//         let pool = await sql.connect(config.sql);
-//         let updateUser = await pool.request()
-//         .input('id',sql.Int,id)
-//         .input('username',sql.VarChar,username)
-//         .input('firstname',sql.VarChar,firstname)
-//         .input('lastname',sql.VarChar,lastname)
-//         .input('password',sql.VarChar,password)
-//         .query('UPDATE Users SET username=@username, firstname=@firstname,password=@password WHERE id= @id') 
-
-//         res.status(200).json({
-//             status:'success',
-//             message: 'User updated successfully',
-//             data:updateUser
-//         })
-//     } catch(error){
-//         res.status(404).json({message: error.message});
-//     }finally{
-//         sql.close();
-//     }
-// }
 
 
 export const updateUser = async (req, res) => {

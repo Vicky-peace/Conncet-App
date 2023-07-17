@@ -21,6 +21,14 @@ import {
 
 } from "./postSlice";
 
+import {
+  likeStart,
+  likeSuccess,
+  likeFailure,
+  createlikesSuccess,
+  dislikeSuccess
+} from './likeSlice'
+
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -93,8 +101,20 @@ export const getPosts = async (dispatch) => {
 }
 
 // likepost
-export const likePost=(id, userId)=>axios.put(`${apiDomain}/like${id}`, {userId: userId})
+// export const likePost=(id, userId)=>axios.put(`${apiDomain}/like${id}`, {userId: userId})
 
+
+export const likePost = async (dispatch,data) => {
+  dispatch(likeStart())
+  try{
+    const likeVal = await axios.put(`${apiDomain}/like${id}`,data);
+    console.log(likeVal);
+    dispatch(likeSuccess());
+  } catch(error){
+      dispatch(likeFailure());
+  }
+
+}
 
 // update user 
 

@@ -5,9 +5,9 @@ import {
   loginFailure,
   loginSuccess,
   logout,
-  // registerStart,
-  // registerSuccess,
-  // registerFailure,
+  updateUserStart,
+  updateUserSuccess,
+  updateUserFailure
 } from "./userSlice";
 import {
   uploadStart,
@@ -54,7 +54,7 @@ export const logOut = function (dispatch) {
 export const getTimelinePosts = (id) => async (dispatch) => {
   dispatch(retrievingStart());
   try {
-    const response = await axios.get(`${apiDomain}/timeline/${id}`);
+    const response = await axios.get(`${apiDomain}/timeline/id`);
     dispatch(retrievingSuccess(response.data));
     alert("Timeline posts retrieved successfully");
   } catch (error) {
@@ -90,5 +90,21 @@ export const getPosts = async (dispatch,token) => {
   dispatch(uploadSuccess(data));
   }catch(error){
     dispatch(uploadFail());
+  }
+}
+
+// likepost
+export const likePost=(id, userId)=>axios.put(`${apiDomain}/like${id}`, {userId: userId})
+
+
+// update user 
+
+export const updateUserProfile = async () => {
+  dispatch(updateUserStart());
+  try{
+    const response = await axios.put(`${apiDomain}/user/:id`)
+    dispatch(updateUserSuccess(response.data));
+  } catch (error){
+     dispatch(updateUserFailure(error.message));
   }
 }

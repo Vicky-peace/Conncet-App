@@ -10,7 +10,7 @@ const postRoutes = (app) => {
     .put(updatePost)
     .delete(deletePost)
 
-    app.route('/:id/like')
+    app.route('/like/:id')
     .put(likePost)
     
     app.route('/timeline/:id')

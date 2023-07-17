@@ -13,7 +13,12 @@ import {
   uploadStart,
   uploadSuccess,
   uploadFail,
-  uploadPostSuccess
+  uploadPostSuccess,
+  retrievingStart,
+  retrievingSuccess,
+  retrievingFail
+
+
 } from "./postSlice";
 
 import axios from "axios";
@@ -73,5 +78,17 @@ export const createPost = async (dispatch,data) =>{
     dispatch(uploadPostSuccess(data))
   } catch(error){
     dispatch(uploadFail())
+  }
+}
+
+// Get posts
+export const getPosts = async (dispatch,token) => {
+  dispatch(uploadStart());
+  try{
+  const {data} = await axios.get(`${apiDomain}/post`,token);
+  console.log(data);
+  dispatch(uploadSuccess(data));
+  }catch(error){
+    dispatch(uploadFail());
   }
 }

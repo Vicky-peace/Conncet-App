@@ -1,8 +1,9 @@
-import {createPost, getPost,updatePost,deletePost,likePost,getTimelinePosts} from '../controllers/postController.js';
+import {createPost, getPost,updatePost,deletePost,likePost,getTimelinePosts, getPosts } from '../controllers/postController.js';
 
 const postRoutes = (app) => {
     app.route('/post')
     .post(createPost)
+    .get( getPosts )
 
     app.route('/post/:id')
     .get(getPost)

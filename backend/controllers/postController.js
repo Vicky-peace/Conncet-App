@@ -31,17 +31,37 @@ export const createPost = async (req, res) => {
     };
     res.status(200).json({
       status: "success",
-          data: createdPost,
-     });
+      data: createdPost,
+    });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     res.status(500).json({ message: error.message });
   } finally {
     sql.close();
   }
 };
 
-// Get post
+// Get all posts
+export const getPosts = async (req, res) => {
+  try {
+    let pool = await sql.connect(config.sql);
+    let result = await pool
+      .request()
+      .query("SELECT p.*, u.id AS userId, username, profilePicture FROM Posts AS p JOIN Users as u ON (u.id = p.userId)");
+
+    res.status(200).json({
+      status: "success",
+      data: result.recordset,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(404).json(error);
+  } finally {
+    sql.close();
+  }
+};
+
+// Get a single post
 export const getPost = async (req, res) => {
   const { id } = req.params;
   try {
@@ -57,6 +77,7 @@ export const getPost = async (req, res) => {
       res.status(200).json(post);
     }
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: error.message });
   } finally {
     sql.close();
@@ -165,26 +186,30 @@ export const likePost = async (req, res) => {
 // Get timeline posts
 
 export const getTimelinePosts = async (req, res) => {
-  const {userId} = req.params;
+  const { userId } = req.params;
 
   try {
     let pool = await sql.connect(config.sql);
     const currentUserPostsResult = await pool
       .request()
-      .input('userId', sql.Int, userId)
-      .query('SELECT * FROM Posts WHERE userId = @userId');
+      .input("userId", sql.Int, userId)
+      .query("SELECT * FROM Posts WHERE userId = @userId");
 
     const followingPostsResult = await pool
       .request()
-      .input('userId', sql.Int, userId)
-      .query('SELECT p.* FROM Users u INNER JOIN Posts p ON u.id = p.userId WHERE u.id IN (SELECT following FROM Users WHERE id = @userId)');
+      .input("userId", sql.Int, userId)
+      .query(
+        "SELECT p.* FROM Users u INNER JOIN Posts p ON u.id = p.userId WHERE u.id IN (SELECT following FROM Users WHERE id = @userId)"
+      );
 
     const currentUserPosts = currentUserPostsResult.recordset;
     const followingPosts = followingPostsResult.recordset;
 
-    const timelinePosts = [...currentUserPosts, ...followingPosts].sort((a, b) => {
-      return new Date(b.createdAt) - new Date(a.createdAt);
-    });
+    const timelinePosts = [...currentUserPosts, ...followingPosts].sort(
+      (a, b) => {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      }
+    );
 
     res.status(200).json(timelinePosts);
   } catch (error) {

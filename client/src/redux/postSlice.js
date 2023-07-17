@@ -26,16 +26,16 @@ const postSlice = createSlice({
       state.error = false;
     },
     retrievingStart: (state) => {
-      state.loading = true;
+      state.isFetching = true;
       state.error = false;
     },
     retrievingSuccess: (state, action) => {
       state.posts = action.payload;
-      state.loading = false;
+      state.isFetching = false;
       state.error = false;
     },
     retrievingFail: (state) => {
-      state.loading = false;
+      state.isFetching = false;
       state.error = true;
     },
   },

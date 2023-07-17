@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 
 import "./userpost.css";
 const UserPost = ({ data }) => {
-  const { user } = useSelector((state) => state.user.user);
+  const { user } = useSelector((state) => state.user?.user);
 
  
 
@@ -30,7 +30,7 @@ const UserPost = ({ data }) => {
     <span style={{ color: "var(--gray" }}>{data.likes} Likes</span>
     <div className="detail">
       <span>
-        <b>{data.name}</b>
+        <b>{data.username}</b>
       </span>
       <span> {data.desc}</span>
     </div>

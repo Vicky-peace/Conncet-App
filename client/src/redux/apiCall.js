@@ -51,17 +51,17 @@ export const logOut = function (dispatch) {
 };
 
 // Posts Requests
-export const getTimelinePosts = (id) => async (dispatch) => {
-  dispatch(retrievingStart());
-  try {
-    const response = await axios.get(`${apiDomain}/timeline/id`);
-    dispatch(retrievingSuccess(response.data));
-    alert("Timeline posts retrieved successfully");
-  } catch (error) {
-    console.log(error);
-    dispatch(retrievingFail());
-  }
-};
+// export const getTimelinePosts = (id) => async (dispatch) => {
+//   dispatch(retrievingStart());
+//   try {
+//     const response = await axios.get(`${apiDomain}/timeline/id`);
+//     dispatch(retrievingSuccess(response.data));
+//     alert("Timeline posts retrieved successfully");
+//   } catch (error) {
+//     console.log(error);
+//     dispatch(retrievingFail());
+//   }
+// };
 
 export const createPost = async (dispatch,data) =>{
   console.log(data, "post info");
@@ -71,7 +71,6 @@ export const createPost = async (dispatch,data) =>{
     console.log(postVal.data.status);
     if(postVal.data.status == "success"){
       alert("Post uploaded successfully")
-      dispatch( uploadSuccess());
     } else{
       alert("Post not uploaded please try again")
     }
@@ -82,14 +81,14 @@ export const createPost = async (dispatch,data) =>{
 }
 
 // Get posts
-export const getPosts = async (dispatch,token) => {
-  dispatch(uploadStart());
+export const getPosts = async (dispatch) => {
+  dispatch(retrievingStart());
   try{
-  const {data} = await axios.get(`${apiDomain}/post`,token);
+  const {data} = await axios.get(`${apiDomain}/post`);
   console.log(data);
-  dispatch(uploadSuccess(data));
+  dispatch(retrievingSuccess(data));
   }catch(error){
-    dispatch(uploadFail());
+    dispatch(retrievingFail(error));
   }
 }
 

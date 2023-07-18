@@ -7,7 +7,8 @@ import {
   logout,
   updateUserStart,
   updateUserSuccess,
-  updateUserFailure
+  updateUserFailure,
+  getUserSuccess,
 } from "./userSlice";
 import {
   uploadStart,
@@ -16,9 +17,7 @@ import {
   uploadPostSuccess,
   retrievingStart,
   retrievingSuccess,
-  retrievingFail
-
-
+  retrievingFail,
 } from "./postSlice";
 
 import {
@@ -26,28 +25,26 @@ import {
   likeSuccess,
   likeFailure,
   createlikesSuccess,
-  dislikeSuccess
-} from './likeSlice'
+  dislikeSuccess,
+} from "./likeSlice";
 
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-
 
 // Login user
 
 export const login = async (dispatch, user) => {
   dispatch(loginStart());
   try {
-    const {data} = await axios.post(`${apiDomain}/auth/login`, user)
-    if(data.token){
+    const { data } = await axios.post(`${apiDomain}/auth/login`, user);
+    if (data.token) {
       dispatch(loginSuccess(data));
-      alert("Logged in successfully")
+      alert("Logged in successfully");
     }
-   
-  } catch ({response}) {
+  } catch ({ response }) {
     dispatch(loginFailure());
-    alert('Invalid Credentials Please input correct credentials');
+    alert("Invalid Credentials Please input correct credentials");
   }
 };
 export const logOut = function (dispatch) {
@@ -71,59 +68,68 @@ export const logOut = function (dispatch) {
 //   }
 // };
 
-export const createPost = async (dispatch,data) =>{
+export const createPost = async (dispatch, data) => {
   console.log(data, "post info");
   dispatch(uploadStart());
-  try{
-    const postVal = await axios.post(`${apiDomain}/post`,data);
+  try {
+    const postVal = await axios.post(`${apiDomain}/post`, data);
     console.log(postVal.data.status);
-    if(postVal.data.status == "success"){
-      alert("Post uploaded successfully")
-    } else{
-      alert("Post not uploaded please try again")
+    if (postVal.data.status == "success") {
+      alert("Post uploaded successfully");
+    } else {
+      alert("Post not uploaded please try again");
     }
-    dispatch(uploadPostSuccess(data))
-  } catch(error){
-    dispatch(uploadFail())
+    dispatch(uploadPostSuccess(data));
+  } catch (error) {
+    dispatch(uploadFail());
   }
-}
+};
 
 // Get posts
 export const getPosts = async (dispatch) => {
   dispatch(retrievingStart());
-  try{
-  const {data} = await axios.get(`${apiDomain}/post`);
-  console.log(data);
-  dispatch(retrievingSuccess(data));
-  }catch(error){
+  try {
+    const { data } = await axios.get(`${apiDomain}/post`);
+    console.log(data);
+    dispatch(retrievingSuccess(data));
+  } catch (error) {
     dispatch(retrievingFail(error));
   }
-}
+};
 
 // likepost
 // export const likePost=(id, userId)=>axios.put(`${apiDomain}/like${id}`, {userId: userId})
 
-
-export const likePost = async (dispatch,data) => {
-  dispatch(likeStart())
-  try{
-    const likeVal = await axios.put(`${apiDomain}/like${id}`,data);
+export const likePost = async (dispatch, data) => {
+  dispatch(likeStart());
+  try {
+    const likeVal = await axios.put(`${apiDomain}/like${id}`, data);
     console.log(likeVal);
     dispatch(likeSuccess());
-  } catch(error){
-      dispatch(likeFailure());
+  } catch (error) {
+    dispatch(likeFailure());
   }
+};
 
-}
+// Get user
+export const getUser = async (dispatch, id) => {
+  try {
+    const { data } = await axios.get(`${apiDomain}/user/${id}`);
+    console.log(data);
+    dispatch(getUserSuccess(data));
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-// update user 
+// update user
 
 export const updateUserProfile = async () => {
   dispatch(updateUserStart());
-  try{
-    const response = await axios.put(`${apiDomain}/user/:id`)
+  try {
+    const response = await axios.put(`${apiDomain}/user/:id`);
     dispatch(updateUserSuccess(response.data));
-  } catch (error){
-     dispatch(updateUserFailure(error.message));
+  } catch (error) {
+    dispatch(updateUserFailure(error.message));
   }
-}
+};

@@ -1,21 +1,35 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import ProfileImage from '../../images/ProfileImage.jpeg';
 import Cover from '../../images/Coverimage.jpg';
+import {useSelector, useDispatch} from 'react-redux';
+import { useLocation } from 'react-router-dom';
+import { getUser } from '../../redux/apiCall';
 import './profileCard.css'
-const Profile = () => {
 
+const Profile = () => {
+  // const id = useLocation().pathname.split("/")[2];
+  const dispatch = useDispatch();
+  const currentuserid = useSelector((state) => state?.user?.user?.data?.id);
+const userId = useSelector((state)=>state?.user?.user?.id);
+const user = useSelector((state)=>state?.user?.currentUser?.user)
+// console.log(user, userId)
+
+  useEffect(()=>{
+    getUser(dispatch, userId);
+  }, [])
   const ProfilePage = true;
   return (
     <div className='Profilecard'>
       <div className="profileimages">
-        <img src={ProfileImage} alt="" />
-        <img src={Cover} alt="" />
+        <img src={user?.profilepicture} alt="profile" />
+        <img src={user?.coverPicture} alt="coverimageclear
+        " />
       </div>
 
       <div className="profileName">
-        <span>Silver hat👨‍💻 </span>
-        <span>@peacekalya</span>
-        <span>SERN stack junior dev</span>
+        <span> {user?.firstname} {user?.lastname}</span>
+        <span>@{user?.username}</span>
+        <span>{user?.about}</span>
       </div>
 
 
@@ -36,8 +50,8 @@ const Profile = () => {
             <>
              <div className="vl"></div>
              <div className="follow">
-              <span>3</span>
-              <span>Posts</span>
+              {/* <span>3</span>
+              <span>Posts</span> */}
              </div>
             </>
           )}

@@ -18,22 +18,6 @@ CREATE TABLE Users (
   updatedAt DATETIME DEFAULT GETDATE()
 );
 
-CREATE TABLE Followers (
-  id INT IDENTITY(1,1) PRIMARY KEY,
-  userId INT NOT NULL,
-  followerId INT NOT NULL,
-  FOREIGN KEY (userId) REFERENCES Users(id),
-  FOREIGN KEY (followerId) REFERENCES Users(id)
-);
-
-CREATE TABLE Following (
-  id INT IDENTITY(1,1) PRIMARY KEY,
-  userId INT NOT NULL,
-  followingId INT NOT NULL,
-  FOREIGN KEY (userId) REFERENCES Users(id),
-  FOREIGN KEY (followingId) REFERENCES Users(id)
-);
-
 CREATE TABLE Posts (
   id INT IDENTITY(1,1) PRIMARY KEY,
   userId INT NOT NULL,
@@ -63,4 +47,13 @@ CREATE TABLE Messages (
   updatedAt DATETIME DEFAULT GETDATE(),
   FOREIGN KEY (chatId) REFERENCES Chats(id),
   FOREIGN KEY (senderId) REFERENCES Users(id)
+);
+CREATE TABLE Relationship
+(
+    id INT PRIMARY KEY IDENTITY(1,1),
+    followeruserId INT,
+    followeduserId INT,
+    
+    FOREIGN KEY (followeruserId) REFERENCES Users(id),
+    FOREIGN KEY (followeduserId) REFERENCES Users(id)
 );

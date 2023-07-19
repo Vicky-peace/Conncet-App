@@ -28,6 +28,14 @@ import {
   dislikeSuccess,
 } from "./likeSlice";
 
+import {
+  followStart,
+  followSuccess,
+  followFailure,
+  createFollowSuccess,
+  unfollowSuccess
+} from './followSlice';
+
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -131,5 +139,50 @@ export const updateUserProfile = async () => {
     dispatch(updateUserSuccess(response.data));
   } catch (error) {
     dispatch(updateUserFailure(error.message));
+  }
+};
+
+export const getFollowers = async (dispatch,id) =>{
+  dispatch(followStart());
+  try{
+    const {data} = await axios.get(`${apiDomain}/follow/${id}`);
+    console.log(data)
+    dispatch(followSuccess(data));
+  } catch(error){
+  dispatch(followFailure());
+  }
+}
+
+// follow user
+export const followUser = async ( dispatch,data) =>{
+  console.log(data)
+  try{
+    const follow = await axios.post(`${apiDomain}/follow`,data);
+    console.log(follow.data.status);
+    if(follow.data.status == "followed"){
+      alert('followed');
+    }else{
+      alert('Something went wrong')
+      dispatch(createFollowSuccess(1));
+    }
+  } catch(error){
+    dispatch(followFailure())
+  }
+  
+}
+
+export const unfollowuser = async (dispatch,data) => {
+  console.log(data);
+  try{
+    const result = await axios.post(`${apiDomain}/unfollow`, data);
+    console.log(result.data.status);
+    if(result.data.status == "unfollowed"){
+      alert('unfollowed')
+    } else{
+      alert('Something went wrong');
+    }
+    dispatch(unfollowSuccess());
+  } catch(error){
+    dispatch(followFailure());
   }
 };

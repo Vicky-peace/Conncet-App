@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { AiOutlineBell } from "react-icons/ai";
+import {GrNotification} from "react-icons/gr";
 import { AiOutlineMessage } from "react-icons/ai";
-import { FiSettings } from "react-icons/fi";
+import { BsFillFilePersonFill} from "react-icons/bs";
 import { AiFillHome } from "react-icons/ai";
 import TrendCard from "../Trend/TrendCard";
 import ShareModal from "../sharemodal/ShareModal";
@@ -17,9 +17,8 @@ const Rightside = () => {
           {" "}
           <AiFillHome style={{ fontSize: "24px" }} />
         </Link>
-
-        <FiSettings style={{ fontSize: "24px" }} />
-        <AiOutlineBell style={{ fontSize: "24px" }} />
+        <Link to= '/profile'><BsFillFilePersonFill style={{ fontSize: '24px' }} /></Link>
+        <GrNotification style={{ fontSize: "24px" }} />
         <AiOutlineMessage style={{ fontSize: "24px" }} />
       </div>
 

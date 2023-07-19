@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import "./userpost.css";
 const UserPost = ({ data }) => {
   const { user } = useSelector((state) => state?.user?.user);
-  const { postsdata } = useSelector((state) => state?.post?.posts);
+  const post = useSelector((state) => state?.post?.posts);
   const dispatch = useDispatch();
 
   const [liked, setLiked] = useState(data.likes);
@@ -41,7 +41,7 @@ const UserPost = ({ data }) => {
       <span style={{ color: "var(--gray" }}>{data.likes} Likes</span>
       <div className="detail">
         <span>
-          <Link to="/profile" style={{ textDecoration: "none" }}>
+          <Link to={`/profile`}style={{ textDecoration: "none" }}>
             <b>{data.username}</b>
           </Link>
         </span>

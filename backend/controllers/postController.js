@@ -139,49 +139,50 @@ export const deletePost = async (req, res) => {
 };
 
 // Like a post
-export const likePost = async (req, res) => {
-  const { id } = req.params;
-  const { userId } = req.body;
+// export const likePost = async (req, res) => {
+//   const { id } = req.params;
+//   const { userId } = req.body;
 
-  try {
-    let pool = await sql.connect(config.sql);
-    const result = await pool
-      .request()
-      .input("id", sql.Int, id)
-      .input("userId", sql.Int, userId)
-      .query("SELECT likes FROM Posts WHERE id = @id");
-    if (result.recordset.length === 0) {
-      res.status(404).json({ message: "Post not found" });
-      return;
-    }
-    const postLikes = JSON.parse(result.recordset[0].likes);
+//   try {
+//     let pool = await sql.connect(config.sql);
+//     const result = await pool
+//       .request()
+//       .input("id", sql.Int, id)
+//       .input("userId", sql.Int, userId)
+//       .query("SELECT likes FROM Posts WHERE id = @id");
+//     if (result.recordset.length === 0) {
+//       res.status(404).json({ message: "Post not found" });
+//       return;
+//     }
+//     const postLikes = JSON.parse(result.recordset[0].likes);
 
-    if (postLikes.includes(userId)) {
-      const updatedLikes = postLikes.filter((like) => like !== userId);
-      await pool
-        .request()
+//     if (postLikes.includes(userId)) {
+//       const updatedLikes = postLikes.filter((like) => like !== userId);
+//       await pool
+//         .request()
 
-        .input("id", sql.Int, id)
-        .input("likes", sql.NVarChar(sql.MAX), JSON.stringify(updatedLikes))
-        .query("UPDATE Posts SET likes = @likes WHERE id = @id");
+//         .input("id", sql.Int, id)
+//         .input("likes", sql.NVarChar(sql.MAX), JSON.stringify(updatedLikes))
+//         .query("UPDATE Posts SET likes = @likes WHERE id = @id");
 
-      res.status(200).json({ message: "Post disliked" });
-    } else {
-      const updatedLikes = [...postLikes, userId];
-      await pool
-        .request()
-        .input("id", sql.Int, id)
-        .input("likes", sql.NVarChar(sql.MAX), JSON.stringify(updatedLikes))
-        .query("UPDATE Posts SET likes = @likes WHERE id = @id");
+//       res.status(200).json({ message: "Post disliked" });
+//     } else {
+//       const updatedLikes = [...postLikes, userId];
+//       await pool
+//         .request()
+//         .input("id", sql.Int, id)
+//         .input("likes", sql.NVarChar(sql.MAX), JSON.stringify(updatedLikes))
+//         .query("UPDATE Posts SET likes = @likes WHERE id = @id");
 
-      res.status(200).json({ message: "Post liked" });
-    }
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  } finally {
-    sql.close();
-  }
-};
+//       res.status(200).json({ message: "Post liked" });
+//     }
+//   } catch (error) {
+//     console.log(error)
+//     res.status(500).json({ message: error.message });
+//   } finally {
+//     sql.close();
+//   }
+// };
 
 // Get timeline posts
 
@@ -216,5 +217,57 @@ export const getTimelinePosts = async (req, res) => {
     res.status(500).json({ message: error.message });
   } finally {
     sql.close();
+  }
+};
+
+
+export const likePost = async (req, res) => {
+  const { id } = req.params;
+  const { userId } = req.body;
+
+  try {
+    let pool = await sql.connect(config.sql);
+    const result = await pool
+      .request()
+      .input("id", sql.Int, id)
+      .query("SELECT likes FROM Posts WHERE id = @id");
+
+    if (result.recordset.length === 0) {
+      res.status(404).json({ message: "Post not found" });
+      return;
+    }
+
+    const postLikes = JSON.parse(result.recordset[0].likes) ?? [];
+
+    if (postLikes.includes(userId)) {
+      const updatedLikes = postLikes.filter((like) => like !== userId);
+      await pool
+        .request()
+        .input("id", sql.Int, id)
+        .input("likes", sql.NVarChar(sql.MAX), JSON.stringify(updatedLikes))
+        .query("UPDATE Posts SET likes = @likes WHERE id = @id");
+
+      res.status(200).json({
+        status: 'success',
+        message: "Post disliked"
+      });
+    } else {
+      const updatedLikes = [...postLikes, userId];
+      await pool
+        .request()
+        .input("id", sql.Int, id)
+        .input("likes", sql.NVarChar(sql.MAX), JSON.stringify(updatedLikes))
+        .query("UPDATE Posts SET likes = @likes WHERE id = @id");
+
+      res.status(200).json({
+        status: 'success',
+        message: "Post liked"
+      });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  } finally {
+    sql.close(); // Close the connection pool properly after finishing the queries.
   }
 };

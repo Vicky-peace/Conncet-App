@@ -3,18 +3,20 @@ import ProfileImage from '../../images/ProfileImage.jpeg';
 import Cover from '../../images/Coverimage.jpg';
 import {useSelector, useDispatch} from 'react-redux';
 import { useLocation } from 'react-router-dom';
-import { getUser } from '../../redux/apiCall';
+import { getUser,getFollowers, followUser, unfollowuser } from '../../redux/apiCall';
 import './profileCard.css'
 
 const Profile = () => {
-  // const id = useLocation().pathname.split("/")[2];
+  const id = useLocation().pathname.split("/")[2];
   const dispatch = useDispatch();
   const currentuserid = useSelector((state) => state?.user?.user?.data?.id);
 const userId = useSelector((state)=>state?.user?.user?.id);
 const user = useSelector((state)=>state?.user?.currentUser?.user)
+const following = useSelector((state) => state?.follow?.follow);
 // console.log(user, userId)
 
   useEffect(()=>{
+    getFollowers(dispatch, userId)
     getUser(dispatch, userId);
   }, [])
   const ProfilePage = true;
@@ -37,7 +39,7 @@ const user = useSelector((state)=>state?.user?.currentUser?.user)
         <hr />
         <div>
           <div className="follow">
-          <span>1,388</span>
+          <span>1378</span>
             <span>Following</span>
             </div>
              {/* <div className="vertical"></div> */}
@@ -46,19 +48,19 @@ const user = useSelector((state)=>state?.user?.currentUser?.user)
             <span>Followers</span>
             </div>
              
-          {ProfilePage && (
+          {<Profile/> && (
             <>
              <div className="vl"></div>
              <div className="follow">
-              {/* <span>3</span>
-              <span>Posts</span> */}
+              <span>3</span>
+              <span>Posts</span>
              </div>
             </>
           )}
         </div>
         <hr />
       </div>
-       {ProfilePage ? '' :
+       {<Profile/> ? '' :
          <span>
          My Profile
         </span>}

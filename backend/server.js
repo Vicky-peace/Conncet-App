@@ -10,6 +10,8 @@ import userRoutes from './Routes/userRoutes.js';
 import chatRoutes from './Routes/chatRoutes.js';
 import postRoutes from './Routes/postRoutes.js';
 import messageRoutes from './Routes/messageRoutes.js';
+import followRoutes from './Routes/followRoute.js';
+import likeRoute from './Routes/likeRoute.js';
 
 const app = express();
 
@@ -43,7 +45,8 @@ userRoutes(app);
 chatRoutes(app);
 postRoutes(app);
 messageRoutes(app);
-
+followRoutes(app);
+likeRoute(app);
 
 app.get('/', (req,res) => {
     res.sendStatus('Hello Welcome to my API👨‍💻');

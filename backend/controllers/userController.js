@@ -59,72 +59,52 @@ export const getUser = async (req, res) => {
 
 export const updateUser = async (req, res) => {
   const {id} = req.params;
-  const { _id, password } = req.body;
+  const {
+    username,
+    firstname,
+    password,
+    lastname,
+    coverPicture,
+    profilePicture,
+    about,
+    livesIn,
+    worksAt,
+    relationship,
+    country
 
-  if (id === _id) {
-    try {
-      let pool = await sql.connect(config.sql);
-      let user = await pool
-        .request()
-        .input('id', sql.Int, id)
-        .query('SELECT * FROM Users WHERE id = @id');
+  } = req.body;
+  // const hashedpwd = bcrypt.hashSync(password, 10);
+  try{
+    let pool = await sql.connect(config.sql);
+  let updatedUser = await pool.request()
 
-      if (user.recordset.length === 0) {
-        res.status(404).json({ message: "User not found" });
-        return;
-      }
-
-      // if we also have to update password then password will be bcrypt-ed again
-      if (password) {
-       
-        const hashedPassword = await bcrypt.hashSync(password,10);
-        await pool
-          .request()
-          .input('id', sql.Int, id)
-          .input('password', sql.NVarChar(255), hashedPassword)
-          .query('UPDATE Users SET password = @password WHERE id = @id');
-      }
-
-      await pool
-        .request()
-        .input('id', sql.Int, id)
-        .input('firstname', sql.NVarChar(255), req.body.firstname)
-        .input('lastname', sql.NVarChar(255), req.body.lastname)
-        .input('isAdmin', sql.Bit, req.body.isAdmin)
-        .input('profilePicture', sql.NVarChar(sql.MAX), req.body.profilePicture)
-        .input('coverPicture', sql.NVarChar(sql.MAX), req.body.coverPicture)
-        .input('about', sql.NVarChar(sql.MAX), req.body.about)
-        .input('livesIn', sql.NVarChar(255), req.body.livesIn)
-        .input('worksAt', sql.NVarChar(255), req.body.worksAt)
-        .input('relationship', sql.NVarChar(255), req.body.relationship)
-        .input('country', sql.NVarChar(255), req.body.country)
-        .query('UPDATE Users SET firstname = @firstname, lastname = @lastname, isAdmin = @isAdmin, profilePicture = @profilePicture, coverPicture = @coverPicture, about = @about, livesIn = @livesIn, worksAt = @worksAt, relationship = @relationship, country = @country WHERE id = @id');
-
-      const updatedUser = await pool
-        .request()
-        .input('id', sql.Int, id)
-        .query('SELECT * FROM Users WHERE id = @id');
-
-        let token = `JWT ${jwt.sign(
-          {
-            username: user.username,
-            id: user.id,
-          },
-          process.env.SECRET,
-          { expiresIn: process.env.EXPIRY }
-        )}`;
+  .input('id', sql.Int, id)
+  .input('firstname', sql.NVarChar(255), firstname)
+  .input('lastname', sql.NVarChar(255), lastname)
+  .input('profilePicture', sql.NVarChar(sql.MAX), profilePicture)
+  .input('coverPicture', sql.NVarChar(sql.MAX), coverPicture)
+  .input('about', sql.NVarChar(sql.MAX), about)
+  // .input('password', sql.NVarChar(sql.MAX), hashedpwd)
+  .input('livesIn', sql.NVarChar(255), livesIn)
+  .input('worksAt', sql.NVarChar(255), worksAt)
+  .input('relationship', sql.NVarChar(255), relationship)
+  .input('country', sql.NVarChar(255), country)
+  .query('UPDATE Users SET firstname = @firstname, lastname = @lastname, profilePicture = @profilePicture, coverPicture = @coverPicture, about = @about, livesIn = @livesIn, worksAt = @worksAt, relationship = @relationship, country = @country WHERE id = @id');
+ 
+  console.log(updatedUser);
+  res.status(200).json({
+    status: "success",
+    user: updatedUser,
+  });
+} catch(error){
+  console.log(error)
+  res.status(404).json({message: error})
+}
 
 
-      res.status(200).json({ user: updatedUser.recordset[0], token });
-    } catch (error) {
-      res.status(500).json(error);
-    } finally {
-      sql.close();
-    }
-  } else {
-    res.status(403).json("Access Denied! You can update only your own Account.");
   }
-};
+  
+ 
 
 // Delete a user
 export const deleteUser = async(req,res) =>{

@@ -132,13 +132,16 @@ export const getUser = async (dispatch, id) => {
 
 // update user
 
-export const updateUserProfile = async () => {
+export const updateUserProfile = async (dispatch,user,dataVal) => {
+  const id = user.id;
+  console.log(id, dataVal);
   dispatch(updateUserStart());
   try {
-    const response = await axios.put(`${apiDomain}/user/:id`);
-    dispatch(updateUserSuccess(response.data));
+    const {data} = await axios.put(`${apiDomain}/user/${id}`,dataVal);
+    console.log(data);
+    dispatch(updateUserSuccess(dataVal));
   } catch (error) {
-    dispatch(updateUserFailure(error.message));
+    dispatch(updateUserFailure());
   }
 };
 

@@ -4,16 +4,17 @@ import React, { useState } from "react";
 import {BsPencilFill} from 'react-icons/bs'
 import ProfileModal from "../profilemodal/ProfileModal";
 import { useDispatch,useSelector } from "react-redux";
-import { logOut} from "../../redux/apiCall";
+import { logOut,getUser} from "../../redux/apiCall";
 
 import "./infocard.css";
 const InfoCard = () => {
   const [modalOpened, setModalOpened] = useState(false);
   const dispatch = useDispatch();
-  const user = useSelector((state) =>state.user.user)
+  const user = useSelector((state) => state?.user.currentUser?.user);
   
   const handleLogout = () => {
     logOut(dispatch);
+    getUser(dispatch)
   };
   return (
     <div className="Infocard">
@@ -35,21 +36,21 @@ const InfoCard = () => {
         <span>
           <b>Status </b>
         </span>
-        <span>.....</span>
+        <span>{user?.relationship}</span>
       </div>
 
       <div className="info">
         <span>
           <b>Lives in </b>
         </span>
-        <span>Eldoret</span>
+        <span>{user?.livesIn}</span>
       </div>
 
       <div className="info">
         <span>
           <b>Works at </b>
         </span>
-        <span>Remote</span>
+        <span>{user?.worksAt}</span>
       </div>
 
       <button className="button logout-button" onClick={handleLogout}>Logout</button>

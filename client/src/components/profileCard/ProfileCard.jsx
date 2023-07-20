@@ -23,7 +23,7 @@ const following = useSelector((state) => state?.follow?.follow);
   return (
     <div className='Profilecard'>
       <div className="profileimages">
-        <img src={user?.profilepicture} alt="profile" />
+        <img src={user?.profilePicture} alt="profile" />
         <img src={user?.coverPicture} alt="coverimageclear
         " />
       </div>

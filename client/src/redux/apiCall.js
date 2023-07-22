@@ -18,6 +18,9 @@ import {
   retrievingStart,
   retrievingSuccess,
   retrievingFail,
+  deletePostStart,
+  deletePostSuccess,
+  deletePostFailure
 } from "./postSlice";
 
 import {
@@ -35,6 +38,14 @@ import {
   createFollowSuccess,
   unfollowSuccess
 } from './followSlice';
+
+import {
+  commentStart,
+  commentSuccess,
+  commentFailure,
+  createCommentSuccess,
+} from "./commentSlice";
+
 
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -105,6 +116,18 @@ export const getPosts = async (dispatch) => {
   }
 };
 
+// Delete post
+export const deletePost = async (id,dispatch, token) =>{
+  console.log(id,token);
+  dispatch(deletePostStart());
+  try{
+    await axios.post(`${apiDomain}/post/${id}`,token);
+    alert("Post deleted successfully")
+  } catch(error){
+    dispatch(deletePostFailure(error))
+    
+  }
+}
 // likepost
 // export const likePost=(id, userId)=>axios.put(`${apiDomain}/like${id}`, {userId: userId})
 
@@ -140,6 +163,7 @@ export const updateUserProfile = async (dispatch,user,dataVal) => {
     const {data} = await axios.put(`${apiDomain}/user/${id}`,dataVal);
     console.log(data);
     dispatch(updateUserSuccess(dataVal));
+    alert('User updated successfully')
   } catch (error) {
     dispatch(updateUserFailure());
   }
@@ -189,3 +213,40 @@ export const unfollowuser = async (dispatch,data) => {
     dispatch(followFailure());
   }
 };
+
+
+// Get comments
+export const getComments = async (dispatch,postId) => {
+  dispatch(commentStart());
+  console.log(postId);
+  try{
+    const {data} = await axios.get(`${apiDomain}/comment/${postId}`);
+    console.log(data);
+    dispatch(commentSuccess(data));
+
+  } catch(error){
+   dispatch(commentFailure());
+  }
+}
+
+// Create comments
+export const createComment = async (dispatch,data) =>{
+  console.log(data, "comment info");
+  dispatch(commentStart());
+  try{
+      const dataVal = await axios.post(`${apiDomain}/comment`,data);
+      console.log(dataVal.data.status);
+      if (dataVal.data.status == "success") {
+        toast.success(`Comment uploaded`, {
+          position: "top-center",
+        });
+      } else {
+        toast.warning(`comment not uploaded`, {
+          position: "top-center",
+        });
+      }
+      dispatch(createCommentSuccess(data));
+  }catch(error){
+    dispatch(commentFailure());
+  }
+}

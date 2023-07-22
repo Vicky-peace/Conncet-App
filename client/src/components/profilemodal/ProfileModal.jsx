@@ -124,8 +124,8 @@ function ProfileModal({ modalOpened, setModalOpened }) {
 
   const [firstname, setFirstname] = useState(`${user.firstname}`);
   const [lastname, setLastname] = useState(`${user.lastname}`);
-  const [cover, setCover] = useState(`${user.coverPicture}`);
-  const [profile, setProfile] = useState(`${user.profilePicture}`);
+  const [cover, setCover] = useState(user.coverPicture);
+  const [profile, setProfile] = useState(user.profilePicture);
   const [worksAt, setWorksAt] = useState(`${user.worksAt}`);
   const [livesIn, setLivesIn] = useState(`${user.livesIn}`);
   const [country, setCountry] = useState(`${user.country}`);

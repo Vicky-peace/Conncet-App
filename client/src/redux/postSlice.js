@@ -38,6 +38,21 @@ const postSlice = createSlice({
       state.isFetching = false;
       state.error = true;
     },
+    deletePostStart: (state) => {
+      state.isFetching = true;
+      state.error = false;
+    },
+    deletePostSuccess: (state,action) => {
+      state.isFetching = false;
+      state.posts.splice(
+        state.posts.findIndex((post) => post.id === action.payload),
+        1
+      );
+    },
+    deletePostFailure: (state) => {
+      state.isFetching = false;
+      state.error =true;
+    }
   },
 });
 export const {
@@ -48,6 +63,9 @@ export const {
   retrievingStart,
   retrievingSuccess,
   retrievingFail,
+  deletePostStart,
+  deletePostSuccess,
+  deletePostFailure
 } = postSlice.actions;
 
 export default postSlice.reducer;

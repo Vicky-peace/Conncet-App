@@ -1,8 +1,10 @@
 import { configureStore, combineReducers } from "@reduxjs/toolkit";
 import userSlice from "./userSlice";
 import postSlice from "./postSlice";
-// import commentSlice from "./commentSlice";
-// import storiesSlice from "./storiesSlice";
+import followSlice from "./followSlice";
+import commentSlice from "./commentSlice";
+import likeSlice from "./likeSlice";
+
 import {
   persistStore,
   persistReducer,
@@ -14,6 +16,8 @@ import {
   REGISTER,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+
+
 const persistConfig = {
   key: "root",
   version: 1,
@@ -23,7 +27,9 @@ const persistConfig = {
 const rootReducer = combineReducers({
   user: userSlice,
   post: postSlice,
-//   comment: commentSlice,
+  comment: commentSlice,
+  follow: followSlice,
+  likes: likeSlice,
 //   story: storiesSlice,
 });
 

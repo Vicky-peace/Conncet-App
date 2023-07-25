@@ -19,7 +19,9 @@ const Rightside = () => {
         </Link>
         <Link to= '/profile'><BsFillFilePersonFill style={{ fontSize: '24px' }} /></Link>
         <GrNotification style={{ fontSize: "24px" }} />
-        <AiOutlineMessage style={{ fontSize: "24px" }} />
+
+        <Link to='/chat'> <AiOutlineMessage style={{ fontSize: "24px" }} /></Link>
+       
       </div>
 
       <TrendCard />

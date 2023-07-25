@@ -2,6 +2,7 @@ import sql from "mssql";
 import bcrypt from "bcrypt";
 import config from "../db/config.js";
 import jwt from "jsonwebtoken";
+import moment from "moment";
 
 // Creating a post
 export const createPost = async (req, res) => {
@@ -132,6 +133,7 @@ export const deletePost = async (req, res) => {
       res.status(200).json({ message: "Post deleted" });
     }
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: error.message });
   } finally {
     sql.close();
@@ -271,3 +273,5 @@ export const likePost = async (req, res) => {
     sql.close(); // Close the connection pool properly after finishing the queries.
   }
 };
+
+

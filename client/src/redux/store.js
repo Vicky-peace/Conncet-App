@@ -4,6 +4,8 @@ import postSlice from "./postSlice";
 import followSlice from "./followSlice";
 import commentSlice from "./commentSlice";
 import likeSlice from "./likeSlice";
+import chatSlice from "./chatSlice";
+import messageSlice from "./messageSlice";
 
 import {
   persistStore,
@@ -30,7 +32,8 @@ const rootReducer = combineReducers({
   comment: commentSlice,
   follow: followSlice,
   likes: likeSlice,
-//   story: storiesSlice,
+   chat: chatSlice,
+   message: messageSlice
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

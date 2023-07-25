@@ -5,21 +5,25 @@ import jwt from "jsonwebtoken";
 
 // Create a chat
 export const createChat = async (req, res) => {
-  const { senderId, receiverId } = req.body;
+  const { senderId, receiverId, userId } = req.body;
   try {
     let pool = await sql.connect(config.sql);
-    let result = await pool
+    let createdChat = await pool
       .request()
-      .input("senderId", sql.Int, senderId)
-      .input("receiverId", sql.Int, receiverId)
+      .input("userId", sql.Int, userId)
+      .input("members", sql.NVarChar, `[${senderId},${receiverId}]`)
       .query(
-        "INSERT INTO Chats (member1Id, member2Id) VALUES (@senderId, @receiverId); SELECT SCOPE_IDENTITY() AS chatId"
+        "INSERT INTO Chat(members,userId)VALUES(@members,@userId)"
       );
+      console.log(createdChat);
+      res.status(200).json({
+        status: "success",
+        data: createdChat,
+      });
 
-    const chatId = result.recordset[0].chatId;
-    res.status(200).json({ chatId });
+  
   } catch (error) {
-    console.error(error);
+    console.log(error);
     res.status(500).json(error);
   } finally {
     sql.close();
@@ -28,40 +32,40 @@ export const createChat = async (req, res) => {
 
 // Getting user chat
 export const userChats = async (req, res) => {
-  const { userId } = req.params;
+  try {
+    const id = req.params.userId;
+    let pool = await sql.connect(config.sql);
+    let posts = await pool
+      .request()
+      .query(`SELECT * FROM Chat WHERE userId=${id} OR members LIKE '%${id}%'`);
+    console.log(posts);
+    res.status(200).json({
+      status: "success",
+      data: posts.recordsets[0],
+    });
+  } catch (err) {
+    res.status(404).json(err);
+  }
+};
+
+export const findChat = async (req, res) => {
+  const { firstId, secondId } = req.params;
   try {
     let pool = await sql.connect(config.sql);
     let result = await pool
       .request()
-      .input("userId", sql.Int, userId)
-      .query(
-        "SELECT * FROM Chats WHERE member1Id = @userId OR member2Id = @userId"
-      );
-
-    const chats = result.recordset;
-    res.status(200).json(chats);
+      .input("members", sql.NVarChar, `[${firstId},${secondId}]`)
+      .query(`SELECT * FROM Chat WHERE members=@members`);
+    
+      res.status(200).json({
+        status: "success",
+        data: result.recordsets,
+      });
+   
   } catch (error) {
+    console.log(error)
     res.status(500).json(error);
   } finally {
     sql.close();
   }
 };
-
-export const findChat = async (req, res) => {
-    const { firstId, secondId } = req.params;
-    try {
-      let pool = await sql.connect(config.sql);
-      let result = await pool
-        .request()
-        .input('firstId', sql.Int, firstId)
-        .input('secondId', sql.Int, secondId)
-        .query('SELECT * FROM Chats WHERE (member1Id = @firstId AND member2Id = @secondId) OR (member1Id = @secondId AND member2Id = @firstId)');
-  
-      const chat = result.recordset[0];
-      res.status(200).json(chat);
-    } catch (error) {
-      res.status(500).json(error);
-    } finally {
-      sql.close();
-    }
-  };

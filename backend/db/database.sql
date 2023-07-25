@@ -28,26 +28,26 @@ CREATE TABLE Posts (
   FOREIGN KEY (userId) REFERENCES Users(id)
 );
 
-CREATE TABLE Chats (
-  id INT IDENTITY(1,1) PRIMARY KEY,
-  member1Id INT NOT NULL,
-  member2Id INT NOT NULL,
+CREATE TABLE Chat (
+  id INT IDENTITY(1, 1) PRIMARY KEY,
+  members NVARCHAR(MAX) NOT NULL,
+  userId INT NOT NULL,
   createdAt DATETIME DEFAULT GETDATE(),
-  updatedAt DATETIME DEFAULT GETDATE(),
-  FOREIGN KEY (member1Id) REFERENCES Users(id),
-  FOREIGN KEY (member2Id) REFERENCES Users(id)
+  FOREIGN KEY (userId) REFERENCES Users(id)
 );
 
-CREATE TABLE Messages (
-  id INT IDENTITY(1,1) PRIMARY KEY,
+CREATE TABLE Message (
+  id INT IDENTITY(1, 1) PRIMARY KEY,
   chatId INT NOT NULL,
   senderId INT NOT NULL,
   [text] NVARCHAR(MAX),
   createdAt DATETIME DEFAULT GETDATE(),
   updatedAt DATETIME DEFAULT GETDATE(),
-  FOREIGN KEY (chatId) REFERENCES Chats(id),
+  FOREIGN KEY (chatId) REFERENCES Chat(id),
   FOREIGN KEY (senderId) REFERENCES Users(id)
 );
+
+
 CREATE TABLE Relationship
 (
     id INT PRIMARY KEY IDENTITY(1,1),
@@ -56,4 +56,16 @@ CREATE TABLE Relationship
     
     FOREIGN KEY (followeruserId) REFERENCES Users(id),
     FOREIGN KEY (followeduserId) REFERENCES Users(id)
+);
+
+ CREATE TABLE Comments
+(
+    id INT PRIMARY KEY IDENTITY,
+    description VARCHAR(200),
+    userId INT,
+    postId INT,
+	createdAt DATETIME
+
+    FOREIGN KEY (userId) REFERENCES Users(id),
+    FOREIGN KEY (postId) REFERENCES Posts(id)
 );

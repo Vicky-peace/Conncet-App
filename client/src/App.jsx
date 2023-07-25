@@ -6,6 +6,7 @@ import Home from './pages/home/Home';
 import Profile from './pages/Profile/Profile';
 import Login from './pages/AuthForm/Login';
 import Register from './pages/AuthForm/Register';
+import Chat from './pages/chat/Chat';
 import './App.css'
 
 
@@ -28,6 +29,7 @@ const user = useSelector((state) =>
         <Route path='/profile' element={ user ? <Profile/> : <Login/>} />
         <Route path='/register' element={ <Register/>}/>
         <Route path='/login' element={  <Login/>}/>
+        <Route path ='/chat' element = {user? <Chat/> : <Login/>}/>
         
        
       

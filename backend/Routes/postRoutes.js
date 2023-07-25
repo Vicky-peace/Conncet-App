@@ -1,4 +1,4 @@
-import {createPost, getPost,updatePost,deletePost,likePost,getTimelinePosts, getPosts } from '../controllers/postController.js';
+import {createPost, getPost,updatePost,deletePost,likePost,getTimelinePosts, getPosts} from '../controllers/postController.js';
 
 const postRoutes = (app) => {
     app.route('/post')
@@ -15,5 +15,7 @@ const postRoutes = (app) => {
     
     app.route('/timeline/:id')
     .get(getTimelinePosts)
+
+ 
 };
 export default postRoutes;

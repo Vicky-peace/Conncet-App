@@ -12,13 +12,15 @@ const Profile = () => {
   const currentuserid = useSelector((state) => state?.user?.user?.data?.id);
 const userId = useSelector((state)=>state?.user?.user?.id);
 const user = useSelector((state)=>state?.user?.currentUser?.user)
-const following = useSelector((state) => state?.follow?.follow);
+const followers = useSelector((state) => state.follow.follow)
+const userid = useSelector((state) => state?.user?.currentUser?.user?.id);
+ 
 // console.log(user, userId)
 
-  useEffect(()=>{
-    getFollowers(dispatch, userId)
-    getUser(dispatch, userId);
-  }, [])
+useEffect(() => {
+  getFollowers(dispatch, userid);
+}, []);
+
   const ProfilePage = true;
   return (
     <div className='Profilecard'>
@@ -52,8 +54,8 @@ const following = useSelector((state) => state?.follow?.follow);
             <>
              <div className="vl"></div>
              <div className="follow">
-              <span>3</span>
-              <span>Posts</span>
+              {/* <span>3</span>
+              <span>Posts</span> */}
              </div>
             </>
           )}

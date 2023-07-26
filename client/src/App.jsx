@@ -7,6 +7,8 @@ import Profile from './pages/Profile/Profile';
 import Login from './pages/AuthForm/Login';
 import Register from './pages/AuthForm/Register';
 import Chat from './pages/chat/Chat';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './App.css'
 
 
@@ -24,6 +26,7 @@ const user = useSelector((state) =>
        <div className='blur' style={{top:'-18%',right: '0'}}></div>
        <div className='blur' style={{top: '36%', left:'-8rem'}}></div>
        <BrowserRouter>
+       <ToastContainer/>
        <Routes>
         <Route path='/' element={user? <Home/> : <Login/>}/>
         <Route path='/profile' element={ user ? <Profile/> : <Login/>} />

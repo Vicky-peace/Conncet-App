@@ -1,4 +1,4 @@
-import {getUser, getAllUsers,updateUser,deleteUser} from '../controllers/userController.js';
+import {getUser, getAllUsers,updateUser,deleteUser,suggestedUsers} from '../controllers/userController.js';
 
 const userRoutes = (app) =>{
     app.route('/user/:id')
@@ -9,11 +9,10 @@ const userRoutes = (app) =>{
     app.route('/users')
     .get( getAllUsers)
 
-    // app.route('users/follow/:id')
-    // .post(followUser)
+    app.route('/suggested/:userId')
+    .get(suggestedUsers)
     
-    // app.route('/users/unfollow/:id')
-    // .post(unfollowUser)
+   
 
 };
 export default userRoutes;

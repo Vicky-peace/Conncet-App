@@ -4,6 +4,7 @@ const userSlice = createSlice({
   initialState: {
     user: null,
     currentUser: null,
+    suggestedUser: null,
     isFetching: false,
     error: false,
   },
@@ -39,21 +40,32 @@ const userSlice = createSlice({
       state.isFetching = true;
       state.error = false;
     },
-    updateUserSuccess(state,action){
+    updateUserSuccess(state, action) {
       state.isFetching = false;
       state.user = action.payload;
     },
-    updateUserFailure(state,action) {
+    updateUserFailure(state, action) {
       state.isFetching = false;
       state.error = action.payload;
     },
-   
-    getUserSuccess(state,action){
+
+    getUserSuccess(state, action) {
       state.isFetching = false;
       state.error = false;
       state.currentUser = action.payload;
     },
-   
+    suggestedSuccess: (state, action) => {
+      state.isFetching = false;
+      state.error = false;
+      state.suggestedUser = action.payload;
+    },
+    followSuggestedSuccess: (state, action) => {
+      state.isFetching = false;
+      state.suggestedUser.splice(
+        state.suggestedUser.findIndex((user) => user.id === action.payload),
+        1
+      );
+    },
   },
 });
 export const {
@@ -68,7 +80,8 @@ export const {
   updateUserSuccess,
   updateUserFailure,
   getUserSuccess,
-  
+  suggestedSuccess,
+  followSuggestedSuccess
 } = userSlice.actions;
 
 export default userSlice.reducer;

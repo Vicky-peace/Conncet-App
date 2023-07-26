@@ -127,125 +127,28 @@ export const deleteUser = async(req,res) =>{
     }
 }
 
-// // Follow a user
-// export const followUser = async (req, res) => {
-//   const id = req.params.id;
-//   const { _id } = req.body;
-
-//   if (_id === id) {
-//     res.status(403).json("Action Forbidden");
-//   } else {
-//     try {
-//       const pool = await sql.connect(config.sql);
-
-//       const followUserResult = await pool
-//         .request()
-//         .input("userId", sql.Int, id)
-//         .input("followerId", sql.Int, _id)
-//         .query("INSERT INTO Followers (userId, followerId) VALUES (@userId, @followerId)");
-
-//       if (followUserResult.rowsAffected[0] === 1) {
-//         res.status(200).json("User followed!");
-//       } else {
-//         res.status(403).json("You are already following this user");
-//       }
-//     } catch (error) {
-//       res.status(500).json(error.message);
-//     } finally {
-//       sql.close();
-//     }
-//   }
-// };
-
-// // UnfollowUser
-
-// export const unfollowUser = async (req, res) => {
-//   const id = req.params.id;
-//   const { _id } = req.body;
-
-//   if (_id === id) {
-//     res.status(403).json("Action Forbidden");
-//   } else {
-//     try {
-//       const pool = await sql.connect(config.sql);
-
-//       const unfollowUserResult = await pool
-//         .request()
-//         .input("userId", sql.Int, id)
-//         .input("followerId", sql.Int, _id)
-//         .query("DELETE FROM Followers WHERE userId = @userId AND followerId = @followerId");
-
-//       if (unfollowUserResult.rowsAffected[0] === 1) {
-//         res.status(200).json("Unfollowed successfully!");
-//       } else {
-//         res.status(403).json("You are not following this user");
-//       }
-//     } catch (error) {
-//       res.status(500).json(error.message);
-//     } finally {
-//       sql.close();
-//     }
-//   }
-// };
-
-// Follow user
-// export const followUser = async (req, res) => {
-//   const id = req.params.id;
-//   const { _id } = req.body;
-
-//   if (_id === id) {
-//     res.status(403).json("Action Forbidden");
-//   } else {
-//     try {
-//       const pool = await sql.connect(config.sql);
-
-//       const followUserResult = await pool
-//         .request()
-//         .input("userId", sql.Int, id)
-//         .input("followerId", sql.Int, _id)
-//         .query("UPDATE Users SET followers = CONCAT(followers, ',', @userId) WHERE id = @userId");
-
-//       if (followUserResult.rowsAffected[0] === 1) {
-//         res.status(200).json("User followed!");
-//       } else {
-//         res.status(403).json("You are already following this user");
-//       }
-//     } catch (error) {
-//       console.log(error)
-//       res.status(500).json(error.message);
-//     } finally {
-//       sql.close();
-//     }
-//   }
-// };
-
-// export const unfollowUser = async (req, res) => {
-//   const id = req.params.id;
-//   const { _id } = req.body;
-
-//   if (_id === id) {
-//     res.status(403).json("Action Forbidden");
-//   } else {
-//     try {
-//       const pool = await sql.connect(config.sql);
-
-//       const unfollowUserResult = await pool
-//         .request()
-//         .input("userId", sql.Int, id)
-//         .input("followerId", sql.Int, _id)
-//         .query("UPDATE Users SET followers = REPLACE(followers, CONCAT(',', @followerId), '') WHERE id = @userId");
-
-//       if (unfollowUserResult.rowsAffected[0] === 1) {
-//         res.status(200).json("Unfollowed successfully!");
-//       } else {
-//         res.status(403).json("You are not following this user");
-//       }
-//     } catch (error) {
-//       res.status(500).json(error.message);
-//     } finally {
-//       sql.close();
-//     }
-//   }
-// };
-
-
+// Suggested users
+export const suggestedUsers = async (req,res) =>{
+  try{
+    const {userId} = req.params;
+    let pool = await sql.connect(config.sql);
+    const result = await pool.request()
+    .input("userId", sql.Int, userId )
+    .query(`
+    SELECT TOP 5* 
+      FROM Users u WHERE u.id <> @userId AND NOT EXISTS
+      (
+        SELECT * FROM Relationship r WHERE r.followeruserId =
+        @userId and r.followeduserId = u.id
+      )
+      ORDER BY NEWID()
+    `
+      
+    );
+    console.log(result);
+    res.status(200).json(result.recordset);
+  } catch(error){
+  console.log(error)
+  res.status(404).json(error);
+  }
+}

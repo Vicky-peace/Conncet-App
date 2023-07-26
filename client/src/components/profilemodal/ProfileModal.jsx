@@ -1,114 +1,3 @@
-// import { Modal, useMantineTheme } from "@mantine/core";
-// import React, {useState, useEffect} from 'react';
-// import {useSelector, useDispatch} from 'react-redux';
-// import {updateUserProfile} from '../../redux/apiCall';
-
-// function ProfileModal({ modalOpened, setModalOpened }) {
-//   const theme = useMantineTheme();
-//   const dispatch = useDispatch();
-//   const user = useSelector((state) => state?.user.currentUser?.user);
-//   // console.log(user.livesIn)
-//   const [cover, setCover] = useState(`${user.coverPicture}`);
-//   const [profile, setProfile] = useState(`${user.profilePicture}`);
-//   const [worksAt, setWorksAt] = useState(`${user.worksAt}`);
-//   const [livesIn, setLivesIn] = useState(`${user.livesIn}`);
-//   const [country, setCountry] = useState(`${user.country}`);
-//   const [relationship, setRelationship] = useState(`${user.relationship}`);
-//   const [about, setAbout] = useState(`${user.about}`);
-
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
-//     updateUserProfile(dispatch, user, { coverPicture: cover, profilePicture: profile, worksAt, livesIn, country, relationship, about});
-//   }
-
-//   return (
-//     <Modal
-//       overlaycolor={
-//         theme.colorScheme === "dark"
-//           ? theme.colors.dark[9]
-//           : theme.colors.gray[2]
-//       }
-//       overlayopacity={0.55}
-//       overlayblur={3}
-//       size="55%"
-//       opened={modalOpened}
-//       onClose={() => setModalOpened(false)}
-//     >
-//       <form className="infoForm" onSubmit={handleSubmit}>
-//         <h3>Your info</h3>
-
-//         <div>
-//           <input
-//             type="text"
-//             className="infoInput"
-//             name="FirstName"
-//             placeholder="First Name..."
-//           />
-
-//           <input
-//             type="text"
-//             className="infoInput"
-//             name="LastName"
-//             placeholder="Last Name..."
-//           />
-//         </div>
-//         <div>
-//           <input
-//             type="text"
-//             className="infoInput"
-//             name="about"
-//             placeholder="About user..."
-//           />
-//         </div>
-
-//         <div>
-//           <input
-//             type="text"
-//             className="infoInput"
-//             name="worksAT"
-//             placeholder="Works at..."
-//           />
-//         </div>
-
-//         <div>
-//           <input
-//             type="text"
-//             className="infoInput"
-//             name="livesIN"
-//             placeholder="LIves in..."
-//           />
-
-//           <input
-//             type="text"
-//             className="infoInput"
-//             name="Country"
-//             placeholder="Country"
-//           />
-//         </div>
-
-//         <div>
-//           <input
-//             type="text"
-//             className="infoInput"
-//             placeholder="RelationShip Status"
-//           />
-//         </div>
-
-//         <div>
-//           Profile Image
-//           <input type="file" name="profileImg" />
-//           Cover Image
-//           <input type="file" name="coverImg" />
-//         </div>
-
-//         <button type ='submit' className="button infoButton">Update</button>
-//       </form>
-//     </Modal>
-//   );
-// }
-
-// export default ProfileModal;
-
 
 import { Modal, useMantineTheme } from "@mantine/core";
 import React, { useState } from 'react';
@@ -122,8 +11,8 @@ function ProfileModal({ modalOpened, setModalOpened }) {
   const dispatch = useDispatch();
   const user = useSelector((state) => state?.user.currentUser?.user);
 
-  const [firstname, setFirstname] = useState(`${user.firstname}`);
-  const [lastname, setLastname] = useState(`${user.lastname}`);
+  const [firstname, setFirstname] = useState(user.firstname);
+  const [lastname, setLastname] = useState(user.lastname);
   const [cover, setCover] = useState(user.coverPicture);
   const [profile, setProfile] = useState(user.profilePicture);
   const [worksAt, setWorksAt] = useState(`${user.worksAt}`);

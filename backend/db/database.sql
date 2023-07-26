@@ -22,7 +22,6 @@ CREATE TABLE Posts (
   id INT IDENTITY(1,1) PRIMARY KEY,
   userId INT NOT NULL,
   [desc] NVARCHAR(MAX) NOT NULL,
-  likes NVARCHAR(MAX),
   createdAt DATETIME DEFAULT GETDATE(),
   [image] NVARCHAR(MAX),
   FOREIGN KEY (userId) REFERENCES Users(id)
@@ -68,4 +67,15 @@ CREATE TABLE Relationship
 
     FOREIGN KEY (userId) REFERENCES Users(id),
     FOREIGN KEY (postId) REFERENCES Posts(id)
+);
+
+
+CREATE TABLE Likes
+(
+    id INT PRIMARY KEY IDENTITY(1,1),
+    likesuserId INT,
+    postuserId INT,
+    
+    FOREIGN KEY (likesuserId) REFERENCES Users(id),
+    FOREIGN KEY (postuserId) REFERENCES Posts(id)
 );

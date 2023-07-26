@@ -22,3 +22,11 @@
     width: 80%;
     align-self: self;
 }
+
+/* Media query for screen widths less than or equal to 768px (e.g., mobile devices) */
+@media (max-width: 768px) {
+  .rightside .TrendCard,
+  .rightside .ShareModal {
+    display: none;
+  }
+}

@@ -9,6 +9,8 @@ import {
   updateUserSuccess,
   updateUserFailure,
   getUserSuccess,
+  suggestedSuccess,
+  followSuggestedSuccess
 } from "./userSlice";
 import {
   uploadStart,
@@ -77,9 +79,15 @@ export const login = async (dispatch, user) => {
     if (data.token) {
       dispatch(loginSuccess(data));
       alert("Logged in successfully");
+      toast.info(`logged in successfully`, {
+        position: "top-center",
+      });
     }
   } catch ({ response }) {
     dispatch(loginFailure());
+    toast.info(`Invalid Credentials Please input correct credentials`, {
+      position: "top-center",
+    });
     alert("Invalid Credentials Please input correct credentials");
   }
 };
@@ -98,10 +106,17 @@ export const createPost = async (dispatch, data) => {
   try {
     const postVal = await axios.post(`${apiDomain}/post`, data);
     console.log(postVal.data.status);
+    dispatch(uploadSuccess());
     if (postVal.data.status == "success") {
       alert("Post uploaded successfully");
+      toast.info(`Post uploaded successfully`, {
+        position: "top-center",
+      });
     } else {
       alert("Post not uploaded please try again");
+      toast.info(`Post  not uploaded please try again`, {
+        position: "top-center",
+      });
     }
     dispatch(uploadPostSuccess(data));
   } catch (error) {
@@ -114,7 +129,7 @@ export const getPosts = async (dispatch) => {
   dispatch(retrievingStart());
   try {
     const { data } = await axios.get(`${apiDomain}/post`);
-    console.log(data);
+    // console.log(data);
     dispatch(retrievingSuccess(data));
   } catch (error) {
     dispatch(retrievingFail(error));
@@ -132,19 +147,7 @@ export const deletePost = async (id, dispatch, token) => {
     dispatch(deletePostFailure(error));
   }
 };
-// likepost
-// export const likePost=(id, userId)=>axios.put(`${apiDomain}/like${id}`, {userId: userId})
 
-export const likePost = async (dispatch, data) => {
-  dispatch(likeStart());
-  try {
-    const likeVal = await axios.put(`${apiDomain}/like${id}`, data);
-    console.log(likeVal);
-    dispatch(likeSuccess());
-  } catch (error) {
-    dispatch(likeFailure());
-  }
-};
 
 // Get user
 export const getUser = async (dispatch, id) => {
@@ -168,6 +171,9 @@ export const updateUserProfile = async (dispatch, user, dataVal) => {
     console.log(data);
     dispatch(updateUserSuccess(dataVal));
     alert("User updated successfully");
+    toast.info(`User updated successfully`, {
+      position: "top-center",
+    });
   } catch (error) {
     dispatch(updateUserFailure());
   }
@@ -220,7 +226,6 @@ export const unfollowuser = async (dispatch, data) => {
 // Get comments
 export const getComments = async (dispatch, postId) => {
   dispatch(commentStart());
-  console.log(postId);
   try {
     const { data } = await axios.get(`${apiDomain}/comment/${postId}`);
     console.log(data);
@@ -333,5 +338,66 @@ export const addMessage = async (dispatch, message) =>{
     dispatch(createmessageSuccess(message));
   } catch(err){
     console.log(err);
+  }
+}
+
+// get likes
+export const getLikePost = async (dispatch, id) => {
+  dispatch(likeStart());
+  try{
+    const likes = [];
+    const {data} = await axios.get(`${apiDomain}/api/likes/${id}`);
+    like.push(data)
+    console.log(likes);
+    console.log(data, `number of  post for ${id}`);
+    dispatch(likesSuccess(data));
+    return { data, likes };
+  } catch(error){
+    dispatch(likeFailure());
+  }
+}
+
+// create like
+export const createlikepost = async (dispatch, data) => {
+  const dataVal = await axios.post(`${apiDomain}/api/likes`, data);
+  console.log(dataVal);
+  if (dataVal.data.status == "success") {
+    toast.success(`Post Liked `, {
+      position: "top-center",
+    });
+    console.log("liked post");
+  } else {
+    toast.warning(`Post not liked`, {
+      position: "top-center",
+    });
+  }
+};
+
+// Unlike a post
+export const deletelikepost = async (dispatch, like, id) => {
+  console.log(id);
+  const { data } = await axios.post(`${apiDomain}/api/likes/${id}`, like);
+  // console.log(dataVal);
+  if (data.status == "success") {
+    toast.success(`Post Unliked `, {
+      position: "top-center",
+    });
+    console.log("liked post");
+  } else {
+    toast.warning(`Something went wrong`, {
+      position: "top-center",
+    });
+  }
+};
+
+export const getSuggested  = async (dispatch, id) =>{
+  
+  try{
+    const {data} = await axios.get(`${apiDomain}/suggested/${id}`);
+    // console.log(data);
+    dispatch(suggestedSuccess(data));
+
+  } catch(error){
+    console.log(error);
   }
 }

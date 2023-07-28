@@ -347,7 +347,7 @@ export const getLikePost = async (dispatch, id) => {
   try{
     const likes = [];
     const {data} = await axios.get(`${apiDomain}/api/likes/${id}`);
-    like.push(data)
+    likes.push(data)
     console.log(likes);
     console.log(data, `number of  post for ${id}`);
     dispatch(likesSuccess(data));
@@ -401,3 +401,22 @@ export const getSuggested  = async (dispatch, id) =>{
     console.log(error);
   }
 }
+
+export const followSuggested = async (dispatch, data, user) => {
+  try {
+    const dataval = await axios.post(`${apiDomain}/follow`, data);
+    console.log(dataval.data.status);
+    if (dataval.data.status == "followed") {
+      toast.info(`${user.username} followed successfully `, {
+        position: "top-center",
+      });
+    } else {
+      toast.warning(`Something went wrong`, {
+        position: "top-center",
+      });
+    }
+    dispatch(followSuggestedSuccess(user.id));
+  } catch (err) {
+    console.log(err);
+  }
+};

@@ -93,7 +93,7 @@ export const login = async (req, res) => {
     }
   } catch (error) {
     console.error(error);
-    res.status(404).json(err);
+    res.status(404).json(error);
   } finally {
     sql.close();
   }

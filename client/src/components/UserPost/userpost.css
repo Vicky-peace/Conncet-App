@@ -29,4 +29,17 @@
     border-radius: 50%;
     cursor: pointer;
 }
-
+.detail {
+    display: flex;
+    align-items: flex-start; /* Align items at the start of the container */
+    gap: 10px; /* Adjust the spacing between elements */
+  }
+  
+  .detail span {
+    /* Add any additional styles you want for the span element */
+    /* For example: */
+    color: #333;
+    font-size: 16px;
+    margin-top: 5px; /* Adjust the spacing between the Link and the span */
+  }
+  

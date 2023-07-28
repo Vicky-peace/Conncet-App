@@ -7,6 +7,7 @@ import {
   followUser,
   unfollowuser,
   getSuggested,
+  followSuggested
 } from "../../redux/apiCall";
 import "./followersCard.css";
 
@@ -24,25 +25,11 @@ const FollowersCard = () => {
     getSuggested(dispatch, userid);
   }, []);
 
-  const handleFollow = () => {
-    if ((currentuserid = following)) {
-      console.log("unfollowed");
-      unfollowuser(dispatch, {
-        followeruserId: currentuserid,
-        followeduserId: userid,
-      });
-    } else {
-      console.log("Started following");
-      followUser(dispatch, {
-        followeruserId: currentuserid,
-        followeduserId: userid,
-      });
-    }
-  };
+
 
   return (
     <div className="FollowersCard">
-      <h3>Who is following you </h3>
+      <h3>Suggested for you  </h3>
 
       {suggested?.map((user) => {
         return (
@@ -68,9 +55,11 @@ const FollowersCard = () => {
             {/* <button className='button fc-button'>
                 Follow
               </button>  */}
-            <button onClick={handleFollow} className="button fc-button">
+            {/* <button onClick={handleFollow} className="button fc-button">
               {currentuserid == suggested ? "Following" : "Follow"}
-            </button>
+            </button> */}
+              <button className='button fc-button' onClick={() => followSuggested(dispatch, { followeruserId: userid, followeduserId: user.id }, user)}>Follow</button>
+              
           </div>
         );
       })}
@@ -80,33 +69,3 @@ const FollowersCard = () => {
 
 export default FollowersCard;
 
-// import React from 'react'
-// import { Followers } from '../../Data/FollowersData'
-// import './followersCard.css'
-// const FollowersCard = () => {
-//   return (
-//     <div className='FollowersCard'>
-//        <h3>Who is following you </h3>
-
-//        {Followers.map((follower,id)=>{
-//           return(
-//             <div key={id} className="follower">
-//               <div>
-//                 <img src={follower.img} alt="" className='followerImage' />
-//                 <div className="name">
-//                   <span>{follower.name}</span>
-//                   <span>@{follower.username}</span>
-//                 </div>
-//               </div>
-
-//               <button className='button fc-button'>
-//                 Follow
-//               </button>
-//             </div>
-//           )
-//        })}
-//     </div>
-//   )
-// }
-
-// export default FollowersCard

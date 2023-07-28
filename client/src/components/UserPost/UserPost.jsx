@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import { BsThreeDots } from 'react-icons/bs';
 import Comments from "../comments/Comments";
+import { BsPersonCircle } from 'react-icons/bs'
 import { getLikePost,createlikepost,deletelikepost } from "../../redux/apiCall";
 import {
   getFollowers
@@ -19,7 +20,9 @@ const UserPost = ({  post }) => {
   // const post = useSelector((state) => state?.post?.posts?.data);
   const token = useSelector((state)=>state?.user.user.accessToken);
   const likedpost = useSelector((state) => state?.likes?.likes)
+  
   const dispatch = useDispatch();
+  // console.log(post.id)
  
 
   const [likedPost, setLikedPost] = useState();
@@ -30,6 +33,15 @@ const UserPost = ({  post }) => {
  
 
   const liked = false;
+  // useEffect(()=>{
+  //   const getLikes = async () =>{
+  //     const {data, likes} = await getLikePost(dispatch, post?.id);
+  //     console.log(data)
+  //     setLikedPost(data);
+  //     setLikedPst(data.length)
+  //   }
+  //   getLikes();
+  // }, []);
 
  
 
@@ -41,6 +53,17 @@ const UserPost = ({  post }) => {
 
   return (
     <div className="Post">
+       
+       <div className="detail">
+       <BsPersonCircle style={{ fontSize: '24px', color: 'black' }} />
+       <Link to={`/profile`}style={{ textDecoration: "none" }}>
+            <b>{post.username}</b>
+          </Link>
+       <span> {post.desc}</span>
+      
+     </div>
+          
+        
       <img src={post.image} alt="" />
       <div className="postsReactions">
         {/* Show the BsThreeDots icon */}
@@ -73,15 +96,7 @@ const UserPost = ({  post }) => {
       </div>
 
       <span style={{ color: "var(--gray" }}>{post.likes} Likes</span>
-      <div className="detail">
-        <span>
-          <Link to={`/profile`}style={{ textDecoration: "none" }}>
-            <b>{post.username}</b>
-          </Link>
-        </span>
-        <span> {post.desc}</span>
-       
-      </div>
+     
       {commentOpen && <Comments postId={post?.id} />}
     
      

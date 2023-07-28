@@ -21,7 +21,7 @@ const Rightside = () => {
         <GrNotification style={{ fontSize: "24px" }} />
         <AiOutlineMessage style={{ fontSize: "24px" }} />
 
-        {/* <Link to='/chat'> <AiOutlineMessage style={{ fontSize: "24px" }} /></Link> */}
+        <Link to='/chat'> <AiOutlineMessage style={{ fontSize: "24px" }} /></Link>
        
       </div>
 

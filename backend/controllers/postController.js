@@ -14,11 +14,10 @@ export const createPost = async (req, res) => {
       .request()
       .input("userId", sql.Int, userId)
       .input("desc", sql.NVarChar(sql.MAX), desc)
-      .input("likes", sql.NVarChar(sql.MAX), JSON.stringify(likes))
       .input("createdAt", sql.DateTime, createdAt)
       .input("image", sql.NVarChar(sql.MAX), image)
       .query(
-        "INSERT INTO Posts (userId, [desc], likes, createdAt, [image]) VALUES (@userId, @desc, @likes, @createdAt, @image); SELECT SCOPE_IDENTITY() AS postId"
+        "INSERT INTO Posts (userId, [desc],  createdAt, [image]) VALUES (@userId, @desc,  @createdAt, @image); SELECT SCOPE_IDENTITY() AS postId"
       );
 
     const postId = result.recordset[0].postId;
@@ -26,7 +25,6 @@ export const createPost = async (req, res) => {
       postId,
       userId,
       desc,
-      likes,
       createdAt,
       image,
     };

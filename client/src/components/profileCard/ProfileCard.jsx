@@ -41,12 +41,12 @@ useEffect(() => {
         <hr />
         <div>
           <div className="follow">
-          <span>1378</span>
+          <span>{followers.length}</span>
             <span>Following</span>
             </div>
              {/* <div className="vertical"></div> */}
              <div className="follow">
-            <span>1,471</span>
+            <span>{followers.length}</span>
             <span>Followers</span>
             </div>
              
